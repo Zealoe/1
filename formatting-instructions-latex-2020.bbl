@@ -1,0 +1,73 @@
+\begin{thebibliography}{}
+
+\bibitem[\protect\citeauthoryear{Kim \bgroup et al\mbox.\egroup
+  }{2019a}]{Kim_2019_CVPR}
+Kim, D.; Woo, S.; Lee, J.-Y.; and Kweon, I.~S.
+\newblock 2019a.
+\newblock Deep blind video decaptioning by temporal aggregation and recurrence.
+\newblock In {\em The IEEE Conference on Computer Vision and Pattern
+  Recognition}.
+
+\bibitem[\protect\citeauthoryear{Kim \bgroup et al\mbox.\egroup
+  }{2019b}]{Kim_2019_CVPR1}
+Kim, D.; Woo, S.; Lee, J.-Y.; and Kweon, I.~S.
+\newblock 2019b.
+\newblock Deep video inpainting.
+\newblock In {\em The IEEE Conference on Computer Vision and Pattern
+  Recognition}.
+
+\bibitem[\protect\citeauthoryear{Newson \bgroup et al\mbox.\egroup
+  }{2014}]{newson2014video}
+Newson, A.; Almansa, A.; Fradet, M.; Gousseau, Y.; and P{\'e}rez, P.
+\newblock 2014.
+\newblock Video inpainting of complex scenes.
+\newblock {\em SIAM Journal on Imaging Sciences} 7(4):1993--2019.
+
+\bibitem[\protect\citeauthoryear{Patwardhan, Sapiro, and
+  Bertalm{\'\i}o}{2007}]{patwardhan2007video}
+Patwardhan, K.~A.; Sapiro, G.; and Bertalm{\'\i}o, M.
+\newblock 2007.
+\newblock Video inpainting under constrained camera motion.
+\newblock {\em IEEE Transactions on Image Processing} 16(2):545--553.
+
+\bibitem[\protect\citeauthoryear{Wang \bgroup et al\mbox.\egroup
+  }{2019}]{wang2019video}
+Wang, C.; Huang, H.; Han, X.; and Wang, J.
+\newblock 2019.
+\newblock Video inpainting by jointly learning temporal structure and spatial
+  details.
+\newblock In {\em Proceedings of the AAAI Conference on Artificial
+  Intelligence}.
+
+\bibitem[\protect\citeauthoryear{{Wexler}, {Shechtman}, and
+  {Irani}}{2007}]{wexler2004space}
+{Wexler}, Y.; {Shechtman}, E.; and {Irani}, M.
+\newblock 2007.
+\newblock Space-time completion of video.
+\newblock {\em IEEE Transactions on Pattern Analysis and Machine Intelligence}
+  29(3):463--476.
+
+\bibitem[\protect\citeauthoryear{Xiong \bgroup et al\mbox.\egroup
+  }{2019}]{Xiong_2019_CVPR}
+Xiong, W.; Yu, J.; Lin, Z.; Yang, J.; Lu, X.; Barnes, C.; and Luo, J.
+\newblock 2019.
+\newblock Foreground-aware image inpainting.
+\newblock In {\em The IEEE Conference on Computer Vision and Pattern
+  Recognition (CVPR)}.
+
+\bibitem[\protect\citeauthoryear{Xu \bgroup et al\mbox.\egroup
+  }{2019}]{Xu_2019_CVPR}
+Xu, R.; Li, X.; Zhou, B.; and Loy, C.~C.
+\newblock 2019.
+\newblock Deep flow-guided video inpainting.
+\newblock In {\em The IEEE Conference on Computer Vision and Pattern
+  Recognition}.
+
+\bibitem[\protect\citeauthoryear{Yu \bgroup et al\mbox.\egroup
+  }{2018}]{yu2018free}
+Yu, J.; Lin, Z.; Yang, J.; Shen, X.; Lu, X.; and Huang, T.~S.
+\newblock 2018.
+\newblock Free-form image inpainting with gated convolution.
+\newblock {\em arXiv preprint arXiv:1806.03589}.
+
+\end{thebibliography}
