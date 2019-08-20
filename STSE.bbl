@@ -1,5 +1,28 @@
 \begin{thebibliography}{}
 
+\bibitem[\protect\citeauthoryear{Gatys, Ecker, and
+  Bethge}{2015}]{gatys2015neural}
+Gatys, L.~A.; Ecker, A.~S.; and Bethge, M.
+\newblock 2015.
+\newblock A neural algorithm of artistic style.
+\newblock {\em arXiv preprint arXiv:1508.06576}.
+
+\bibitem[\protect\citeauthoryear{Ilg \bgroup et al\mbox.\egroup
+  }{2017}]{Flownet_2017_CVPR}
+Ilg, E.; Mayer, N.; Saikia, T.; Keuper, M.; Dosovitskiy, A.; and Brox, T.
+\newblock 2017.
+\newblock Flownet 2.0: Evolution of optical flow estimation with deep networks.
+\newblock In {\em The IEEE Conference on Computer Vision and Pattern
+  Recognition}.
+
+\bibitem[\protect\citeauthoryear{Isola \bgroup et al\mbox.\egroup
+  }{2017}]{Isola_2017_CVPR}
+Isola, P.; Zhu, J.-Y.; Zhou, T.; and Efros, A.~A.
+\newblock 2017.
+\newblock Image-to-image translation with conditional adversarial networks.
+\newblock In {\em The IEEE Conference on Computer Vision and Pattern
+  Recognition}.
+
 \bibitem[\protect\citeauthoryear{Kim \bgroup et al\mbox.\egroup
   }{2019a}]{Kim_2019_CVPR}
 Kim, D.; Woo, S.; Lee, J.-Y.; and Kweon, I.~S.
@@ -16,6 +39,13 @@ Kim, D.; Woo, S.; Lee, J.-Y.; and Kweon, I.~S.
 \newblock In {\em The IEEE Conference on Computer Vision and Pattern
   Recognition}.
 
+\bibitem[\protect\citeauthoryear{Liu \bgroup et al\mbox.\egroup
+  }{2018}]{liu2018partialinpainting}
+Liu, G.; Reda, F.~A.; Shih, K.~J.; Wang, T.-C.; Tao, A.; and Catanzaro, B.
+\newblock 2018.
+\newblock Image inpainting for irregular holes using partial convolutions.
+\newblock In {\em The European Conference on Computer Vision}.
+
 \bibitem[\protect\citeauthoryear{Newson \bgroup et al\mbox.\egroup
   }{2014}]{newson2014video}
 Newson, A.; Almansa, A.; Fradet, M.; Gousseau, Y.; and P{\'e}rez, P.
@@ -29,6 +59,22 @@ Patwardhan, K.~A.; Sapiro, G.; and Bertalm{\'\i}o, M.
 \newblock 2007.
 \newblock Video inpainting under constrained camera motion.
 \newblock {\em IEEE Transactions on Image Processing} 16(2):545--553.
+
+\bibitem[\protect\citeauthoryear{Pont-Tuset \bgroup et al\mbox.\egroup
+  }{2017}]{davis_2017}
+Pont-Tuset, J.; Perazzi, F.; Caelles, S.; Arbel\'aez, P.; Sorkine-Hornung, A.;
+  and {Van Gool}, L.
+\newblock 2017.
+\newblock The 2017 davis challenge on video object segmentation.
+\newblock {\em arXiv:1704.00675}.
+
+\bibitem[\protect\citeauthoryear{Sajjadi, Scholkopf, and
+  Hirsch}{2017}]{Sajjadi_2017_ICCV}
+Sajjadi, M. S.~M.; Scholkopf, B.; and Hirsch, M.
+\newblock 2017.
+\newblock Enhancenet: Single image super-resolution through automated texture
+  synthesis.
+\newblock In {\em The IEEE International Conference on Computer Vision}.
 
 \bibitem[\protect\citeauthoryear{Wang \bgroup et al\mbox.\egroup
   }{2019}]{wang2019video}
@@ -53,7 +99,14 @@ Xiong, W.; Yu, J.; Lin, Z.; Yang, J.; Lu, X.; Barnes, C.; and Luo, J.
 \newblock 2019.
 \newblock Foreground-aware image inpainting.
 \newblock In {\em The IEEE Conference on Computer Vision and Pattern
-  Recognition (CVPR)}.
+  Recognition}.
+
+\bibitem[\protect\citeauthoryear{Xu \bgroup et al\mbox.\egroup
+  }{2018}]{xu2018youtube}
+Xu, N.; Yang, L.; Fan, Y.; Yue, D.; Liang, Y.; Yang, J.; and Huang, T.
+\newblock 2018.
+\newblock Youtube-vos: A large-scale video object segmentation benchmark.
+\newblock {\em arXiv preprint arXiv:1809.03327}.
 
 \bibitem[\protect\citeauthoryear{Xu \bgroup et al\mbox.\egroup
   }{2019}]{Xu_2019_CVPR}
