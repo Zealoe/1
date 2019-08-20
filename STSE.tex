@@ -94,10 +94,10 @@
 
 \begin{abstract}
 	Video inpainting targets to fill the missing regions in videos, which requires high spatio-temporal consistency.
-	However, recent deep-learning based methods focus on temporally smoothening inpainted frames via motion information, which ignore detailed structure clues.
+	However, recent deep-learning based methods focus on temporally smoothening inpainted frames via motion information, which lack an effective mechanism to explore detailed structure clues.
 	In this paper, we propose a novel Spatio-Temporal Structure Enhancement Network (STSENet) for video inpainting, which simultaneously considers temporal continuity and detailed structure enhancement. 
 	Specifically, STSENet first synthesizes missing optical flow and detailed edge across frames in a parallel way, which are associated with a flow-edge consistency constraint for mutual improvements.
-	Then, both edge-preserved flow and temporal coherent edge are used to promote video frame generation, via an edge-attention mechanism and a flow-guided propagation.
+	Then, both edge-preserved flow and temporal coherent edge are used to promote video frame generation, via an structure enhancement mechanism and a flow-guided propagation.
 	Consequently, the inpainted frames by STSENet are both temporally stabilized and visually pleasing in detailed structures, with low time cost. 
 	Experiments on YouTubeVOS and DAVIS show that STSENet obtains state-of-the-art performance and few artificial flickers, which demonstrate the significance of simultaneous temporal smoothening and structure enhancement in video inpainting.
 	
@@ -109,36 +109,47 @@
 \section{Introduction}
 \noindent Video inpainting targets to recover the missing contents given videos with spatio-temporal pixels, which can assist lots of practical applications, e.g., video restoration and augmented reality. Compared with image inpainting, video inpainting is much more challenging due to extra time dimension, which requires not only reasonable spatial structures but also stable temporal consistency. Specifically, it is suboptimal to directly apply 2D image inpainting algorithms, such as \cite{yu2018free,Xiong_2019_CVPR}, to individual frames, which will lead to serious artificial effect, such as flickers and jitters. 
 
-To exploit complementary neighbor information across frames, traditional patch-based methods \cite{patwardhan2007video,wexler2004space,newson2014video} recurrently copy the similar patches from unmasked regions and pasting them to the missing regions. 
+To exploit complementary neighbor information across frames, traditional patch-based methods \cite{patwardhan2007video,wexler2004space,newson2014video} recurrently copy the similar patches from unmasked regions and past them to the missing regions. 
 This kind of methods depends on a strong hypothesis that the missing content have appeared in neighboring frames, which limits their generalization.
 Recently, deep-learning based methods achieve state-of-the-art performance by treating a video as volume and developing CNNs, e.g., 3D convolution operation \cite{wang2019video}, to predict missing content with smooth motion, which is learned from training data.
 Among these methods, optical flow is commonly used \cite{Xu_2019_CVPR,Kim_2019_CVPR,Kim_2019_CVPR1} to aggregate context information from neighboring frames, rendering the inpainted content to be temporally consistent.
 However, the auxiliary motion compensation brought by optical flow lacks detailed structural clues, i.m., the edge and shape in optical flow are usually blurry, leading to deficiently spatial structure rationality.
 Thus, only optical flow is deficient to facilitate video inpainting, in terms of both temporal content smoothing and detailed structure rationality.
 
-To address above issues, we present a novel video inpainting network, called Spatio-Temporal Structure Enhancement Network (STSENet), by simultaneously exploring optical flow and structural edge, to eliminate temporal flickers and enhance spatial detail. 
-Given frames with missing pixels, STSENet first predicts the missing edge and optical flow, according to learned semantic shape knowledge and motion tendency from the training data, via two auxiliary inpainting modules.
+
+
+
+\begin{figure}[t]
+	\centering
+	\includegraphics[width=1.0\columnwidth]{zong} % Reduce the figure size so that it is slightly narrower than the column. Don't use precise values for figure width.This setup will avoid overfull boxes. 
+	\caption{The overall pipeline of STSENet. To recover the missing holes in videos, we simultaneously complete edge details and optical flow across frames with a flow-edge consistency constraint for mutual improvements. Then both edge and optical flow are utilized to aid frame inpainting, via an edge-attention mechanism and a flow-guided propagation. Thus, STSENet can produce inpainting results with abundant spatial details and stable temporal consistency.}
+	\label{zong}
+\end{figure}
+
+
+To address above issues, we present a novel video inpainting network, called Spatio-Temporal Structure Enhancement Network (STSENet), by simultaneously exploring optical flow and structural clues, to eliminate temporal flickers and enhance spatial detail. 
+Specifically, STSENet consists of three modules, as shown in Fig.~\ref{zong}.
+Given frames with missing pixels, STSENet first predicts the missing edge and optical flow, according to learned structure knowledge and motion tendency from the training data, via two auxiliary inpainting modules.
 These two modules are associated with each other, instead of separate training, via a flow-edge consistency loss.
-This results in both edge-enhanced optical flow and temporally smooth edge for mutual improvements, which is superior to existing methods using only optical flow \cite{Xu_2019_CVPR,Kim_2019_CVPR1}.
-Then, both completed edge and optical flow are exploited to guide a Spatio-Temporal Inpainting (STI) module for video content generation, which is detail-preserved and temporal coherent.
-Specifically, an edge attention module is developed for STI to focus on edge region and encourage similar edge texture generation, which can enhance the detailed structure.
+This results in both edge-enhanced optical flow and temporally smooth edge for mutual improvements, which is superior to single flow generation \cite{Xu_2019_CVPR,Kim_2019_CVPR1}.
+Then, both completed edge and optical flow are exploited to guide a Spatio-Temporal Inpainting (STI) module for detail-preserved and temporal coherent video generation.
+Specifically, an structure enhancement mechanism is developed for STI to encode detailed structure clues from the completed edge into the generated frames.
 For motion guidance in STI, the optical flow is used by propagating complementary pixels from neighboring frames to current frame to alleviate artificial flickers and jitters.
+
 
 \begin{figure*}[t]
 	\centering
-	\includegraphics[width=2.0\columnwidth]{zong} % Reduce the figure size so that it is slightly narrower than the column. Don't use precise values for figure width.This setup will avoid overfull boxes. 
-	\caption{The overall pipeline of STSENet. To recover the missing holes in videos, we simultaneously complete edge details and optical flow across frames with a flow-edge consistency constraint for mutual improvements. Then both edge and optical flow are utilized to aid frame inpainting, via an edge-attention mechanism and a flow-guided propagation. Thus, STSENet can produce inpainting results with abundant spatial details and stable temporal consistency.}
-	\label{zong}
+	\includegraphics[width=2.0\columnwidth]{sti} % Reduce the figure size so that it is slightly narrower than the column. Don't use precise values for figure width.This setup will avoid overfull boxes. 
+	\caption{. }
+	\label{sti}
 \end{figure*}
-
-
 
 
 Overall, the video inpainting by STSENet is structural reasonable and temporal coherent by exploring auxiliary optical flows and structure edges, which obtains state-of-the-art performance on YouTubeVOS and DAVIS dataset. Our contributions can be summarized as follows.
 \begin{itemize}
 	\item We propose a novel Spatio-Temporal Structure Enhancement Network (STSENet) for video inpainting, which can simultaneously eliminate temporal flickers and enhance spatial structure details.
 	\item We prove that the auxiliary optical flow and structure edges are complementary in video inpainting by using a flow-edge consistency constraint to associate them for mutual improvements.
-	\item An edge attention module and a flow-guided propagation are developed to utilize respective structural edges and optical flow to promote video inpainting.			
+	\item An structure enhancement mechanism and a flow-guided propagation are developed to utilize respective structural edges and optical flow to promote video inpainting.			
 \end{itemize}
 
 
