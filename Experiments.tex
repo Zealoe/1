@@ -1,1 +1,152 @@
 \section{Experiments}
+\subsection{Dataset and Experimental Settings}
+\textbf{Dataset.} We test on two datasets, YoutubeVOS \cite{xu2018youtube} and DAVIS \cite{davis_2017}, to demonstrate effectiveness of inpainting with the guidance of spatial details and temporal information.
+\textbf{YoutubeVOS} is a large-scale dataset for video object segmentation, which containing 4,453 YouTube video clips. The videos are splited into 3,471 for training, 474 for validating and 508 for testing.
+\textbf{DAVIS} contains 150 video clips, among which 90 are high-quality foreground annotated. 
+
+
+\noindent \textbf{Mask Setting.} Considering real-world application, we use four kinds of mask setting in this paper. (1) \textbf{Fixed square box}: The square box mask is fixed through the whole video. (2) \textbf{Moving square box}: The square mask moves and changes size in each frame. (3) \textbf{Free-from mask}: We apply free-form mask, following \cite{liu2018partialinpainting}, to each frame. (4) \textbf{Foreground object mask} We use the foreground mask which lines out the object.
+
+\noindent \textbf{Implementation Details.} We first train ENet and FNet jointly. Then the STI module is trained with fixed completed edge maps and optical flow. Adam optimizer with $\beta=(0.9, 0.999)$ and learning rate 1e-4 is used.
+In our experiments, we resize all video frames to $256\times256$ for training, validating and testing.
+
+\noindent \textbf{Evaluation Metrics.} (1) structural similarity index (SSIM) \cite{wang2004image}, (2) peak signal-to-noise ratio (PSNR), and (3) Fr{\'e}chet Inception Distance (FID) \cite{heusel2017gans} are used to evaluate our methods. 
+Besides, there is no ground truth for experiments of object removal, so we carry out user study for this kind of mask setting. 
+
+
+\subsection{Ablation Study}
+To demonstrate the effectiveness of several components in our STSENet, we conduct ablation study in this section. We only use the first three mask settings on YoutubeVOS.
+
+\noindent \textbf{Baselines.} Several variant models are defined in this section. (1) STI: The Spatio-Temporal Inpainting network with structure enhancement mechanism and edge input. Temporal information is not involved in this baseline. (2) STI w/o SEM: The Spatio-Temporal Inpainting network without structure enhancement mechanism and edge input. Temporal information is also not used. (3) STSENet w/o $\mathcal{L}_{fec}$: The Spatio-Temporal Inpainting network with guidance of both structure and motion. $\mathcal{L}_{fec}$ is not used in the first three models. (4) STSENet is the model which uses all modules proposed in this paper.
+
+\noindent \textbf{Effect of Structure Clues in STSENet.}
+To evaluate the effect of exploring structural information in video inpainting, we compare two kinds of inpainting baselines: STI and STI w/o SEM.
+As shown in Table~\ref{tab:edge}, the network achieves better results when edge information is utilized. It indicates that edge clues is an effective guidance in video inpainting, which helps the network to predict more accurate frames.
+The visualization results in Fig.~\ref{edge_result} shows that STI can generate frames with finer details when guided by edge clues. So it's crucial to explore spatial details when inpainting the videos.
+
+\begin{table}[t]
+	\caption{The effect of structure clues in STSENet. The mask number denotes the indexes of mask setting in the section Experimental Settings. We compare STI and STI w/o SEM in three aspects of metrics.}\smallskip
+	\centering
+	\resizebox{.95\columnwidth}{!}{
+		\smallskip\begin{tabular}{c|c|c|c|c}
+			\hline
+			Mask &Method  & PSNR & SSIM & FID\\
+			\hline
+			\multirow{2}*{1}&STI &  &  & \\
+			\cline{2-5} 
+			&  STI w/o SEM   &  &  & \\
+			\hline
+			
+			\multirow{2}*{2}&STI &  &  & \\
+			\cline{2-5} 
+			&  STI w/o SEM   &  &  & \\
+			
+			\hline
+			\multirow{2}*{3}&STI &  &  & \\
+			\cline{2-5} 
+			&  STI w/o SEM   &  &  & \\
+			\hline
+		\end{tabular}
+	}
+	\label{tab:edge}
+\end{table}
+%We test baselines, 
+
+\noindent \textbf{Effect of Temporal Smoothening in STSENet.}
+Temporal Consistency is an important factor in video inpainting. In STSENet, we utilize a flow warping loss to smoothen the artificial flickers and propagate complementary information from neighboring frames. To evaluate the impact of temporal smoothening in STI, we compare two baselines, STI and STSENet. The STSENet involves motion guidance which is not utilized in STI.
+As shown in Table~\ref{tab:flow}, STSENet works better than STI, which demonstrates that complenmentary information is propagated through temporal smoothening. Temporal consistency is guaranteed, which is shown qualitatively in Fig.~\ref{flow_result}. Flickers are alleviated when motion guidance is involved. 
+
+\begin{table}[t]
+	\caption{The effect of temporal smoothening in STSENet. The mask number denotes the indexes of mask setting in the section Experimental Settings. We compare STSENet and STI in three aspects of metrics.}\smallskip
+	\centering
+	\resizebox{.95\columnwidth}{!}{
+		\smallskip\begin{tabular}{c|c|c|c|c}
+			\hline
+			Mask &Method  & PSNR & SSIM & FID\\
+			\hline
+			\multirow{2}*{1}&STSENet w/o $\mathcal{L}_{fec}$ &  &  & \\
+			\cline{2-5} 
+			&  STI   &  &  & \\
+			\hline
+			
+			\multirow{2}*{2}&STSENet w/o $\mathcal{L}_{fec}$&  &  & \\
+			\cline{2-5} 
+			&  STI   &  &  & \\
+			
+			\hline
+			\multirow{2}*{3}&STSENet w/o $\mathcal{L}_{fec}$&  &  & \\
+			\cline{2-5} 
+			&  STI   &  &  & \\
+			\hline
+		\end{tabular}
+	}
+	\label{tab:flow}
+\end{table}
+
+\noindent \textbf{Effect of Flow-Edge Consistency Loss.}
+Flow-edge consistency loss $\mathcal{L}_{fec}$ is designed for mutual improvement of optical flow and edge maps.
+To demonstrate the effectiveness of $\mathcal{L}_{fec}$ in training, we compare the performances between STSENet w/o $\mathcal{L}_{fec}$ and STSENet. We use standard end-point-error (EPE) metric to evaluate the completion of optical flow. Besides, the well-completed flow and edge aid the final inpainting results, so the quality of final inpainting results also reflects the impact of $\mathcal{L}_{fec}$.
+The quantitative results are shown in Table~\ref{tab:lfec}. It indicates that $\mathcal{L}_{fec}$ plays a positive role in prediction of flow and edge, which is helpful for video inpainting. The visulization results in Fig.~\ref{lfec1} shows that $\mathcal{L}_{fec}$ encourages the network to predict more accurate optical flow along the boundaries, which demonstrates the mutual improvement between flow and edge maps.
+\begin{table}[t]
+	\caption{The Impact of Flow-Edge Consistency Loss.}\smallskip
+	
+		\centering
+	\resizebox{.95\columnwidth}{!}{
+		\smallskip\begin{tabular}{c|c|c|c|c|c}
+			\hline
+			\multirow{2}*{Mask}& \multirow{2}*{Method} &Flow Completion & \multicolumn{3}{c}{Video Inpainting}\\
+			\cline{3-6} 
+			& &EPE & PSNR & SSIM & FID\\
+			\hline
+			\multirow{2}*{1}&STSENet w/o $\mathcal{L}_{fec}$&  &  & \\
+			\cline{2-6} 
+			&  STSENet     &  &  & \\
+			\hline
+			
+			\multirow{2}*{2}&STSENet w/o $\mathcal{L}_{fec}$&  &  & \\
+			\cline{2-6} 
+			&  STSENet    &  &  & \\
+			
+			\hline
+			\multirow{2}*{3}&STSENet w/o $\mathcal{L}_{fec}$&  &  & \\
+			\cline{2-6} 
+			&  STSENet   &  &  & \\
+			\hline
+		\end{tabular}
+	}
+	\label{tab:lfec}
+\end{table}
+
+\subsection{Comparisons with Existing Methods}
+We compare our results with other inpainting methods.
+As shown in Table, STSENet achieves better results
+\begin{table}[t]
+	\caption{Comparisons with existing methods.}\smallskip
+	
+	\centering
+	\resizebox{.95\columnwidth}{!}{
+		\smallskip\begin{tabular}{c|c|c|c|c|c}
+			\hline
+			Mask &Method  & PSNR & SSIM & FID\\
+			\hline
+			\multirow{2}*{1}&STSENet w/o $\mathcal{L}_{fec}$ &  &  & \\
+			\cline{2-5} 
+			&  STI   &  &  & \\
+			\hline
+			
+			\multirow{2}*{2}&STSENet w/o $\mathcal{L}_{fec}$&  &  & \\
+			\cline{2-5} 
+			&  STI   &  &  & \\
+			
+			\hline
+			\multirow{2}*{3}&STSENet w/o $\mathcal{L}_{fec}$&  &  & \\
+			\cline{2-5} 
+			&  STI   &  &  & \\
+			\hline
+		\end{tabular}
+	}
+	\label{tab:lfec}
+\end{table}
+
+\subsection{User Study}
+In addition to qualitative comparison, we also conduct a user study to evaluate our method.
