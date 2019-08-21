@@ -71,7 +71,7 @@ The detailed architecture of FNet is shown in Figure~\ref{enet}.
 The loss function for FNet is :
 \begin{equation}
 \label{eq:flow_all}
-\mathcal{L}_{flow}=\mathcal{L}^F_{rec}+\mathcal{L}^F_{har},
+\mathcal{L}_{flow}=\mathcal{L}^F_{rec}+\lambda_2 * \mathcal{L}^F_{har},
 \end{equation}
 where $\mathcal{L}^F_{rec}$ and $\mathcal{L}^F_{har}$ are respectively $l_1$-reconstruction loss and hard mining loss.
 The $l_1$-reconstruction loss is defined as:
@@ -107,7 +107,7 @@ Consequently, besides $\mathcal{L}_{edge}$ and $\mathcal{L}_{flow}$ for respecti
 Thus, the total loss function for joint training of ENet and FNet is:
 \begin{equation}
 \label{eq:flow}
-\mathcal{L}_{joint}=\mathcal{L}_{edge}+\mathcal{L}_{flow}+\mathcal{L}_{fec}.
+\mathcal{L}_{joint}=\mathcal{L}_{edge}+\mathcal{L}_{flow}+\lambda_3 * \mathcal{L}_{fec}.
 \end{equation}
 
 

@@ -55,6 +55,14 @@ Liu, G.; Reda, F.~A.; Shih, K.~J.; Wang, T.-C.; Tao, A.; and Catanzaro, B.
 \newblock Image inpainting for irregular holes using partial convolutions.
 \newblock In {\em The European Conference on Computer Vision}.
 
+\bibitem[\protect\citeauthoryear{Nazeri \bgroup et al\mbox.\egroup
+  }{2019}]{nazeri2019edgeconnect}
+Nazeri, K.; Ng, E.; Joseph, T.; Qureshi, F.; and Ebrahimi, M.
+\newblock 2019.
+\newblock Edgeconnect: Generative image inpainting with adversarial edge
+  learning.
+\newblock {\em arXiv preprint arXiv:1901.00212}.
+
 \bibitem[\protect\citeauthoryear{Newson \bgroup et al\mbox.\egroup
   }{2014}]{newson2014video}
 Newson, A.; Almansa, A.; Fradet, M.; Gousseau, Y.; and P{\'e}rez, P.
