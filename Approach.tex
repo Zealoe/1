@@ -2,24 +2,15 @@
 \label{sec:approach}
 
 The target of STSENet is to recover the missing contents in a corrupted video.
-In each inference batch, to generate current frame \(Y_t\), total $5$ frames $\boldsymbol{X}$, indexed by $\msset{X}$, are fed to STSENet, as well as corresponding masks $\boldsymbol{M}$, to inpaint current frame \(Y_t\).
-$\boldsymbol{M}$ is the mask sequence that indicates the missing regions in $\boldsymbol{X}$, and \( \widetilde{Y}_t\) is the ground truth of current frame.
+%
+Our intuition is that there exists complementary information in neighboring frames, which can benefit the inpainting process of each individual frame.
+Therefore, in each inference batch, to generate a complete frame \(Y_t\) at time $t$, total $5$ frames $\boldsymbol{X}$, indexed by $\msset{X}$, are fed to STSENet, as well as corresponding masks $\boldsymbol{M}$ that indicate the missing regions.
 %Our method infers each target frame $Y_t$ individually but with hints from its neighboring source frames.
 %
-The intuition is that there exists complementary information in the neighboring frames, which can benefit the inpainting process of the current frame.
-As shown in Fig.~\ref{fig:stiNet}, our STSENet mainly consists of three parts: (a) an edge inpainting network that recovers structural details of input frames, (b) a flow inpainting network that completes the dense motions in the missing regions between neighbor frames and the target frame, and (c) a spatio-temporal inpainting network that generates plausible contents that looks spatially and temporally consistent.
-The detailed implementation of each part will be illustrated in the following sections.
+As shown in Fig.~\ref{fig:stiNet}, our STSENet mainly consists of three parts: (a) an edge inpainting network that recovers structural details of the input frames, (b) a flow inpainting network that completes the dense motions in the missing regions between neighbor frames and the target frame, and (c) a spatio-temporal inpainting network that generates plausible contents that looks spatially and temporally consistent.
+The detailed implementation of each part will be explained in the following sections.
 
-
-%For convenience, \( \widetilde{Y}_{1:T}\) is denoted as the ground truth video, and \(M_{1:T}\) is the mask sequence that indicates the missing regions in \(X_{1:T}\).
-%In each inference batch, to generate current frame \(Y_t\), total $5$ frames $\boldsymbol{X}$, indexed by $\msset{X}$, are fed to STSENet, as well as corresponding mask $\boldsymbol{M}$.  
-
-%\cxj{use edge inpainting subnetwork and flow inpainting subnetwork to keep the same with Fig1?}
-
-
-
-
-
+ 
 
 
 
@@ -27,26 +18,25 @@ The detailed implementation of each part will be illustrated in the following se
 \label{sec:edgenet}
 
 Video inpainting suffers from the lack of structural details.
-To inpaint the missing regions with fine details, we first predict corresponding reasonable structural clues, which are beneficial to the following frame inpainting process.
+To inpaint the missing regions with fine details, we first predict their corresponding reasonable structural clues, which are beneficial to the following frame inpainting process.
 %The edge completion module aims to generate the completed edge maps $\boldsymbol{E}$ for input frames $\boldsymbol{X}$. 
 %
 
-Given the input frames $\boldsymbol{X}$, we first employ a Canny edge detector to extract the edge maps $\boldsymbol{E}^{i}$. 
+Given the input frames $\boldsymbol{X}$, we first extract their edge maps $\boldsymbol{E}^{i}$, of which there are no edges in the masked regions, using Canny edge detector. 
 %Given the incompleted grayscale images $\boldsymbol{X}^{g}$ of input frame, a canny edge detector is first used to generate initial edge maps . 
-Then, an edge inpainting network (ENet) is designed to complete the missing edges in $\boldsymbol{E}^{i}$.
-The input of our ENet consists of the grayscale frames $\boldsymbol{X}^{g}$, initial edge maps $\boldsymbol{E}^{i}$, and corresponding masks $\boldsymbol{M}$.
+Then, the edge inpainting network (ENet) completes the missing edges in $\boldsymbol{E}^{i}$.
+The input of our ENet consists of the grayscale frames $\boldsymbol{X}^{g}$, initial edge maps $\boldsymbol{E}^{i}$, and their corresponding masks $\boldsymbol{M}$.
 %
-The detailed implementation of ENet is shown in Fig.~\ref{fig:stiNet}, which consists of a generator $G^E$ and a discriminator $D^E$.
+The detailed architecture of ENet is shown in Fig.~\ref{fig:stiNet}, which consists of a generator $G^E$ and a discriminator $D^E$.
 $G^E$ contains a 2-layer 3D encoder, eight 2D residual blocks, and a 2-layer 3D decoder. 
-The 3D encoder and decoder are designed to learn spatio-temporal information, while the 2D residual blocks are used to enrich the spatial features in a larger receptive field. The discriminator $D^E$ follows the $70\times 70$ PatchGAN architecture \cite{Isola_2017_CVPR}. 
-%\cxj{There is no mark for the generator and discriminator in Fig.2.}
+The 3D encoder and decoder are designed to learn the spatial-temporal correlation, while the 2D residual blocks are used to enrich the spatial features in a larger receptive field. The discriminator $D^E$ follows the $70\times 70$ PatchGAN architecture \cite{Isola_2017_CVPR}. 
 Finally, the inpainted edge maps are obtained by:
 \begin{equation}
 \label{eq:edgenet}
 \boldsymbol{E}=G^E(\boldsymbol{E}^{i},\boldsymbol{X}^{g},\boldsymbol{M}),
 \end{equation}
 
-The ENet is trained by playing a minimax game to optimize the generator $G^E$ and discriminator $D^E$ as
+The ENet is trained by playing a minimax game to optimize the generator $G^E$ and the discriminator $D^E$ as
 \begin{equation}
 \label{eq:loss_e}
 \min\limits_{G^E} \max \limits_{D^E} \big(\mathcal{L}^E_{adv}+\lambda_1 * \mathcal{L}^E_{fm}\big),
@@ -58,7 +48,9 @@ Following the adversarial learning manner, $\mathcal{L}^E_{adv}$ can facilitate 
 \begin{equation} \label{eq:edge_adver}
 \mathcal{L}^E_{adv}  =\mathbb{E}\big[logD^E(\boldsymbol{E}^{gt},\boldsymbol{X}^{g})\big] +\mathbb{E} \big[log\big(1-D^E ( \boldsymbol{E},\boldsymbol{X}^{g})\big)\big],
 \end{equation}
-where $E^{gt}$ represents the ground truth of edge maps. $\mathcal{L}^E_{fm}$ evaluates the feature-level similarity between ground truth edge maps and predicted edge maps, which helps to create structurally rational edge maps. The feature matching loss is defined by:
+where $E^{gt}$ represents the ground truth edge maps. $\mathcal{L}^E_{fm}$ evaluates the feature-level similarity between ground truth edge maps and predicted edge maps, which helps to create structurally rational edge maps. 
+\mdf{Feature matching loss has been widely used in recent GANs \cite{}... }
+The feature matching loss is defined by:
 \begin{equation}
 \label{eq:edge_fm}
 \mathcal{L}^E_{fm}=\sum_{k=1}^L{\frac{1}{N_k}\left\| D^E_k(\boldsymbol{E}^{gt},\boldsymbol{X}^{g})- D^E_k(\boldsymbol{E},\boldsymbol{X}^{g})\right\|_1},
@@ -72,27 +64,27 @@ Note that the discriminator $D^E$ is not optimized by the feature matching loss 
 \subsection{Flow Inpainting Network}
 
 It is vitally important to maintain temporal consistency in video inpainting.
-To this end, the flow inpainting network (FNet)  is designed to predict the motion tendency among frames.
-
-Similar to ENet, an initial flow \(\boldsymbol{O}^i\) for each group of neighboring frames $\boldsymbol{X}$ are first generated using flow extraction network like FlowNet2.0 \cite{Flownet_2017_CVPR}.
-Notably, \(\boldsymbol{O}^i\) consists of four flow maps \((O^i_{t\Rightarrow t-7},O^i_{t\Rightarrow t-3},O^i_{t\Rightarrow t+3},O^i_{t\Rightarrow t+7})\) for the input 5 frames.
+To this end, we design a flow inpainting network (FNet) to predict the motion tendency among frames.
+%
+Similar to ENet, an initial flow maps \(\boldsymbol{O}^i\) for each group of neighboring frames $\boldsymbol{X}$ are first generated using an flow extraction network, such as FlowNet2.0~\cite{Flownet_2017_CVPR}.
+Notably, \(\boldsymbol{O}^i\) consists of four flow maps \((O^i_{t\Rightarrow t-7}, O^i_{t\Rightarrow t-3}, O^i_{t\Rightarrow t+3}, O^i_{t\Rightarrow t+7})\) for the input 5 frames.
 Then, the proposed FNet $G^F$ is used to complete \(\boldsymbol{O}^i\) by:
 \begin{equation}
 \label{eq:flownet}
 \boldsymbol{O}=G^F(\boldsymbol{O}^{i},\boldsymbol{M}),
 \end{equation}
-where $\boldsymbol{O}$ is the predicted optical flow.
-%\cxj{Xuejin: I modified $N^E$ and $N^F$ to $G^E$ and $G^O$ to avoid confusion with number symbols $N$.  }
+where $\boldsymbol{O}$ denotes the predicted optical flows.
 %
 The detailed architecture of FNet is shown in Fig.~\ref{fig:stiNet}.
 
-The loss function for FNet is :
+To train the flow inpainting network FNet, the loss function is given by:
 \begin{equation}
 \label{eq:flow_all}
 \mathcal{L}_{flow}=\mathcal{L}^F_{rec}+ \mathcal{L}^F_{har},
 \end{equation}
-where $\mathcal{L}^F_{rec}$ and $\mathcal{L}^F_{har}$ are respectively $l_1$-reconstruction loss and hard mining loss, which follow the settings in \cite{Xu_2019_CVPR}. Specifically, $\mathcal{L}^F_{har}$ encourages the network to focus on those hard samples, which can avoid blurred texture.
-%   \cxj{same as the cvpr19paper?... reference?? remove the definition if reference is provided. }. 
+where $\mathcal{L}^F_{rec}$ and $\mathcal{L}^F_{har}$ are respectively $l_1$-reconstruction loss and hard mining loss, following the definition in \cite{Xu_2019_CVPR}. 
+Specifically, $\mathcal{L}^F_{har}$ encourages the network to focus on those hard samples in order to avoid blurry texture.
+
 %
 %The $l_1$-reconstruction loss is defined as:
 %\begin{equation}
@@ -109,19 +101,22 @@ where $\mathcal{L}^F_{rec}$ and $\mathcal{L}^F_{har}$ are respectively $l_1$-rec
 %The hard mining loss encourages the network to focus on those hard samples, which can avoid blurred texture. 
 
 \subsection{Flow-Edge Consistency Loss}
-Instead of separately training the two subnetworks ENet and FNet, we train the two networks jointly, because the temporal information and structural details can boost each other.
+
+
+Instead of separately training the two subnetworks ENet and FNet, we train the two networks jointly, because the temporal correlation and structural details can boost each other.
 %, thereby rendering them to be mutually improved.
 %Thus we will obtain detail-aware optical flow and temporal consistent edge maps.
 To achieve this goal, a flow-edge consistency loss is defined as:
+%
 \begin{equation}
 \label{eq:flow_edge}
 \mathcal{L}_{fec}=\sum_{k}\frac{1}{\left\|M_{t} \right\|_1}\left\|(E_{t}-\phi(O_{t\Rightarrow t-k},E_{t-k}))\odot M_{t}\right\|_1,
 \end{equation}
-where $\phi(O_{t\Rightarrow t-k},E_{t-k})$ is the flow warping operation which uses optical flow $O_{t\Rightarrow t-k}$ to warp $E_{t-k}$.
+where $\phi(O_{t\Rightarrow t-k},E_{t-k})$ is the warping operation which warps the edge map $E_{t-k}$ to the target frame according to the generated optical flow $O_{t\Rightarrow t-k}$.
 $k$ denotes the index of neighboring frames ($k\in \left\{-7,-3,+3,+7 \right\}$). 
-Specifically, $\mathcal{L}_{fec}$ warps the edge maps from neighboring frames to the target frame to penalize the reconstruction loss.
-In terms of ENet, $\mathcal{L}_{fec}$ encourages the predicted edge maps to be temporal smoothing, which should conform to the motion tendency in the flow $\boldsymbol{O}$. 
-In terms of FNet, $\mathcal{L}_{fec}$ constrains the model to focus on the edges in $\boldsymbol{E}$ by considering extra edge motion in Eq.~\ref{eq:flow_edge}. 
+%Specifically, $\mathcal{L}_{fec}$ warps the edge maps from neighboring frames to the target frame to penalize the reconstruction loss.
+In terms of ENet, $\mathcal{L}_{fec}$ encourages the predicted edge maps to be temporally smoothing, which should conform to the motion tendency in the flow maps $\boldsymbol{O}$. 
+In terms of FNet, $\mathcal{L}_{fec}$ constrains the model to focus on the edges in $\boldsymbol{E}$ by emphasizing edge motion in Eq.~\ref{eq:flow_edge}. 
 Consequently, besides of the loss terms $\mathcal{L}_{edge}$ and $\mathcal{L}_{flow}$ for ENet and FNet respectively, $\mathcal{L}_{fec}$ further enhances them to obtain temporally consistent edges and edge-clear flows.
 Thus, the total loss function for joint training of ENet and FNet is:
 \begin{equation}
@@ -134,24 +129,19 @@ Thus, the total loss function for joint training of ENet and FNet is:
 
 
 
+\subsection{Spatio-Temporal Inpainting Network}
 
-
-
-
-
-
-\subsection{Spatio-Temporal Inpainting (STI) Network}
-
-With both the inpainted edges $\boldsymbol{E}$ and flows $\boldsymbol{O}$, a spatio-temporal inpainting (STI) network is designed to obtain the final target frame $Y_t$.
-%under the guidance of the  and motion tendency, which is helpful to the completion process of the target frame...
+Combining the inpainted edge maps $\boldsymbol{E}$ and flow maps $\boldsymbol{O}$, a spatio-temporal inpainting network \mdf{(STINet)} is designed to obtain the final target frame $Y_t$.
+\cxj{I modified to STINet to make it consistent with ENet and FNet. If it is ok, pls modify Fig 2 (STI Module) accordingly.}
+%under the guidance of the edges and motion tendency, which is helpful to the completion process of the target frame...
 Notably, the inpainted edges and flows provide structural details and temporal correlation, respectively.
-To generate plausible video content, STI adopts a coarse-to-fine architecture, consisting of a coarse network and a refinement network, as shown in Fig.~\ref{fig:stiNet}.
+To generate plausible video content, STINet adopts a coarse-to-fine architecture and consists of a coarse network and a refinement network, as shown in Fig.~\ref{fig:stiNet}.
 
 %
-Input of STI is the concatenation of $\boldsymbol{X}$, $\boldsymbol{E}$, and $\boldsymbol{M}$.
-First, the coarse network is implemented with 3D convolutions to capture the temporal information, which targets to generate an initial rough completed frame. The 3D coarse network is able to incorporate information from neighboring frames by convolution of the time dimension.
-%\cxj{Need refinement. why 3D convs works for generating complete frame?}
-Second, the refinement network is implemented with 2D convolution layers to enhance structural details and refine the initial completed frame.
+The input of STINet is the concatenation of $\boldsymbol{X}$, $\boldsymbol{E}$, and $\boldsymbol{M}$.
+First, the coarse network consists of a set of 3D convolutions to capture the temporal information, which targets to generate an initial rough completed frame with textures. 
+The 3D coarse network is able to incorporate information from neighboring frames by convolution of the time dimension.
+Second, the refinement network is implemented with 2D convolution layers to enhance structural details and refine the initial completed frame to produce a visually realistic frame with fine textures.
 
 \begin{figure}[t]
 	\centering
@@ -160,7 +150,8 @@ Second, the refinement network is implemented with 2D convolution layers to enha
 	\label{SEM}
 \end{figure}
 
-To fully exploit the structural information in $\boldsymbol{E}$, a structure enhancement mechanism (SEM) is designed for STI.
+To fully exploit the structural information in $\boldsymbol{E}$, a structure enhancement mechanism (SEM) is designed for STINet.
+\cxj{Need one sentence to introduce the main concept of SEM here.}
 As shown in Fig.~\ref{SEM}, two separate convolution blocks are first applied to $\boldsymbol{E}$.
 Then, the input feature map and extracted structural information are interacted via matrix multiplication. 
 Next, a SoftMax operation is used to obtain a normalized attention map.
