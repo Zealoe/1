@@ -7,7 +7,8 @@ Our intuition is that there exists complementary information in neighboring fram
 Therefore, in each inference batch, to generate a complete frame \(Y_t\) at time $t$, total $5$ frames $\boldsymbol{X}$, indexed by $\msset{X}$, are fed to STSENet, as well as corresponding masks $\boldsymbol{M}$ that indicate the missing regions.
 %Our method infers each target frame $Y_t$ individually but with hints from its neighboring source frames.
 %
-As shown in Fig.~\ref{fig:stiNet}, our STSENet mainly consists of three parts: (a) an edge inpainting network that recovers structural details of the input frames, (b) a flow inpainting network that completes the dense motions in the missing regions between neighbor frames and the target frame, and (c) a spatio-temporal inpainting network that generates plausible contents that looks spatially and temporally consistent.
+\mdf{To enhance the structural details in the inpainted region, our STSTNet consists of two parts: an edge inpainting network ENet that recovers structural details of the input frames and (b) a spatio-temporal inpainting network STINet that generates plausible contents that looks spatially and temporally consistent. While this forward pass takes multiple frames as input and only completes a single frame, we design a flow inpainting network FNet which predicts the motion flows in the missing regions to enforce the temporal consistency in the inpainted edge maps and videos in a joint learning manner. }
+%As shown in Fig.~\ref{fig:stiNet}, our STSENet mainly consists of three parts: (a) an edge inpainting network that recovers structural details of the input frames, (b) a flow inpainting network that completes the dense motions in the missing regions between neighbor frames and the target frame, and (c) a spatio-temporal inpainting network that generates plausible contents that looks spatially and temporally consistent.
 The detailed implementation of each part will be explained in the following sections.
 
  
@@ -134,14 +135,20 @@ Thus, the total loss function for joint training of ENet and FNet is:
 Combining the inpainted edge maps $\boldsymbol{E}$ and flow maps $\boldsymbol{O}$, a spatio-temporal inpainting network \mdf{(STINet)} is designed to obtain the final target frame $Y_t$.
 \cxj{I modified to STINet to make it consistent with ENet and FNet. If it is ok, pls modify Fig 2 (STI Module) accordingly.}
 %under the guidance of the edges and motion tendency, which is helpful to the completion process of the target frame...
-Notably, the inpainted edges and flows provide structural details and temporal correlation, respectively.
-To generate plausible video content, STINet adopts a coarse-to-fine architecture and consists of a coarse network and a refinement network, as shown in Fig.~\ref{fig:stiNet}.
+Notably, the inpainted edges and flows provide structural details and temporal correlation, respectively. 
+\cxj{Maybe move this paragraph backward. }
 
+
+
+
+
+To generate plausible video content, a spatio-temporal inpainting network \mdf{(STINet)} is designed to obtain the final target frame $Y_t$.
+Our STINet adopts a coarse-to-fine architecture, which consists of a coarse network and a refinement network, as shown in Fig.~\ref{fig:stiNet}.
 %
 The input of STINet is the concatenation of $\boldsymbol{X}$, $\boldsymbol{E}$, and $\boldsymbol{M}$.
 First, the coarse network consists of a set of 3D convolutions to capture the temporal information, which targets to generate an initial rough completed frame with textures. 
-The 3D coarse network is able to incorporate information from neighboring frames by convolution of the time dimension.
-Second, the refinement network is implemented with 2D convolution layers to enhance structural details and refine the initial completed frame to produce a visually realistic frame with fine textures.
+The 3D coarse network is able to incorporate information from neighboring frames by convolutions of the time dimension.
+Second, the refinement network is implemented with 2D convolutional layers to enhance structural details and refine the initial completed frame to produce a visually realistic frame with fine textures.
 
 \begin{figure}[t]
 	\centering
@@ -151,13 +158,51 @@ Second, the refinement network is implemented with 2D convolution layers to enha
 \end{figure}
 
 To fully exploit the structural information in $\boldsymbol{E}$, a structure enhancement mechanism (SEM) is designed for STINet.
-\cxj{Need one sentence to introduce the main concept of SEM here.}
-As shown in Fig.~\ref{SEM}, two separate convolution blocks are first applied to $\boldsymbol{E}$.
-Then, the input feature map and extracted structural information are interacted via matrix multiplication. 
+\cxj{Need one sentence to introduce the main concept of SEM here. An attention mechanism? }
+As shown in Fig.~\ref{SEM}, two separate convolution blocks are first applied to the predicted edge maps $\boldsymbol{E}$.
+Then, the input feature maps and the extracted structural information from edge maps are interacted via matrix multiplication. 
+\cxj{Explain reshape?}
+%
 Next, a SoftMax operation is used to obtain a normalized attention map.
+%
 Besides the short-range edge information in $\boldsymbol{E}$, the normalized attention map contains extra long-range correlation between structure and high-level features of video content.
 Finally, the normalized attention map is applied to the original video features, and the structure information is thus encoded in the intermediate features of STI.
-After introducing structure information, the inpainted video content by STI becomes more structure-preserved and semantically realistic.
+After introducing structure information, the inpainted video content by STINet becomes with more structurally and semantically realistic.
+
+
+
+\cxj{Introduce the loss for the generated $Y_t$ first. Then temporal consistence loss guided by the flows. }
+
+\mdf{First reconstruction loss between the predicted video frame and the ground truth video frame $\widetilde{Y}_t$.}
+Inspired by \cite{nazeri2019edgeconnect}, $\mathcal{L}^{I}_{rec}$ \mdf{measures the difference between .. }. It consists of three terms:
+\begin{equation}
+\mathcal{L}^{I}_{rec}=\mathcal{L}^{I}_{l1}+\lambda_3 *\mathcal{L}^{I}_{per}+\lambda_4 *\mathcal{L}^{I}_{sty},
+\end{equation}
+%
+where the first term is pixel $l_1$ loss to evaluate generation quality. Different from \cite{nazeri2019edgeconnect}, we penalize both the coarse and fine predictions, which is defined by:
+\begin{equation}
+\begin{aligned}
+\mathcal{L}^{I}_{rec}&=\frac{1}{\left\|\boldsymbol{M} \right\|_1}\left\|(\boldsymbol{Y}^i-\widetilde{\boldsymbol{Y}})\odot \boldsymbol{M}\right\|_1\\ &+\lambda_5*\frac{1}{\left\|M_t \right\|_1}\left\|(Y_t-\widetilde{Y}_t)\odot M_t\right\|_1.
+\end{aligned}
+\end{equation}
+%
+\cxj{What is $Y^i$? }
+The second term is the perceptual loss \cite{gatys2015neural}, which compares the semantic contents between the generated frame and ground truth. The third term is the style loss, designed to prevent "checkerboard" artifacts \cite{Sajjadi_2017_ICCV} caused by transpose convolution.
+ 
+ 
+\cxj{Explain why we need the adv loss. Are we the first to use Ladv or we follow existing method?}
+
+$\mathcal{L}^I_{adv}$ is defined as:
+\begin{equation}
+\label{eq:inp_adver}
+\mathcal{L}^I_{adv}=\min\limits_{G^I} \max \limits_{D^I}\mathbb{E}[logD^I(\widetilde{Y}_t)]+\mathbb{E}log[1-D^I(Y_{t})],
+\end{equation}
+where $G^I$ is the STI and $D^I$ possesses the same architecture as that of $D^E$, except the input dimension.
+
+
+
+
+\cxj{I would suggest introduce the forward pass in a subsection and the joint learning with flows in another subsection. }
 
 To smooth temporal flickers and aggregate complementary neighboring clues, the motion tendency information in $\boldsymbol{O}$ is utilized by warping the neighboring frames into the target frame and employing a frame reconstruction constraint.
 Specifically, a flow warping loss is proposed:
@@ -180,27 +225,6 @@ Finally, the loss function for STI is:
 where $\mathcal{L}^{I}_{rec}$, $\mathcal{L}^I_{adv}$, and $\mathcal{L}^I_{flo}$ are respectively reconstruction loss, adversarial loss and flow warping loss.
 
 
-Inspired by \cite{nazeri2019edgeconnect}, $\mathcal{L}^{I}_{rec}$ consists of three terms by:
-\begin{equation}
-\mathcal{L}^{I}_{rec}=\mathcal{L}^{I}_{l1}+\lambda_3 *\mathcal{L}^{I}_{per}+\lambda_4 *\mathcal{L}^{I}_{sty},
-\end{equation}
-%\begin{equation}
-%\begin{aligned}
-%\mathcal{L}^{I}_{rec}=&\frac{1}{\left\|\boldsymbol{M} \right\|_1}\left\|(\boldsymbol{Y}^i-\widetilde{\boldsymbol{Y}})\odot \boldsymbol{M}\right\|_1 +\frac{1}{\left\|M_t \right\|_1}\left\|(Y_t-\widetilde{Y}_t)\odot M_t\right\|_1\\
-%&+\mathbb{E}[\sum_{j}\frac{1}{N_j}\left\|\boldsymbol{\psi}_j(\widetilde{Y}_t)-\boldsymbol{\psi}_j(Y_t)\right\|_1]\\
-%&+\mathbb{E}_j[\left\|G^{\boldsymbol{\psi}_j}(\widetilde{Y}_t)-G^{\boldsymbol{\psi}_j}(Y_t)\right\|_1],
-%\end{aligned}
-%\end{equation}
-where the first term is pixel $l_1$ loss to evaluate generation quality. Different from \cite{nazeri2019edgeconnect}, we penalize both the coarse and fine predictions, which is defined by:
-\begin{equation}
-\begin{aligned}
-\mathcal{L}^{I}_{rec}&=\frac{1}{\left\|\boldsymbol{M} \right\|_1}\left\|(\boldsymbol{Y}^i-\widetilde{\boldsymbol{Y}})\odot \boldsymbol{M}\right\|_1\\ &+\lambda_5*\frac{1}{\left\|M_t \right\|_1}\left\|(Y_t-\widetilde{Y}_t)\odot M_t\right\|_1.
-\end{aligned}
-\end{equation}
-%
-
-The second term is the perceptual loss \cite{gatys2015neural}, which compares the semantic contents between the generated frame and ground truth. The third term is the style loss, designed to prevent "checkerboard" artifacts \cite{Sajjadi_2017_ICCV} caused by transpose convolution.
-
 
 
 
@@ -208,9 +232,3 @@ The second term is the perceptual loss \cite{gatys2015neural}, which compares th
 %The third term is the style loss, designed to prevent "checkerboard" artifacts \cite{Sajjadi_2017_ICCV} caused by transpose convolution. $G^{\boldsymbol{\psi}_j}$ is the Gram matrix calculated by auto-correlation of $\boldsymbol{\psi}_j$. The layers are the same as that of perceptual loss.
 
 
-$\mathcal{L}^I_{adv}$ is defined as:
-\begin{equation}
-\label{eq:inp_adver}
-\mathcal{L}^I_{adv}=\min\limits_{G^I} \max \limits_{D^I}\mathbb{E}[logD^I(\widetilde{Y}_t)]+\mathbb{E}log[1-D^I(Y_{t})],
-\end{equation}
-where $G^I$ is the STI and $D^I$ possesses the same architecture as that of $D^E$, except the input dimension.
