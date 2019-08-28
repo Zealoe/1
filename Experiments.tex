@@ -7,26 +7,48 @@
 
 
 \section{Experiments}
+
+
+\mdf{In order to evaluate the effect of different components in our STSTNet and compare with other state-of-the-art approaches, we conduct a series of experiments on two datasets...}
 We test on two datasets, YoutubeVOS \cite{xu2018youtube} and DAVIS \cite{davis_2017}, to compare the proposed STSENet with state-of-the-art methods. %Several ablation studies are conducted to prove the effectiveness of spatial details and temporal information in video inpainting.
 \subsection{Experimental Settings}
 \textbf{Dataset.} 
-\textbf{YoutubeVOS} is a large-scale dataset for video object segmentation, which containing 4,453 YouTube video clips. The videos are close to real-world scenario with 70+ common objects. The videos are splited into 3,471 for training, 474 for validating and 508 for testing.
-\textbf{DAVIS} dataset contains 150 video clips, among which 90 are densely foreground annotated. The videos are complex with occlusions, fast motion, and various objects. 
+\mdf{Two datasets, YoutubeVOS \cite{xu2018youtube} and DAVIS \cite{davis_2017} are widely used for evaluation in recent video inpainting approaches. }
+\textbf{YoutubeVOS} is a large-scale dataset that contains 4,453 YouTube video clips. These videos are close to real-world scenario with 70+ common objects. 
+The videos are split into three parts, 3,471 for training, 474 for validating, and 508 for testing. \cxj{randomly? or we use the same splitting set? }
+\textbf{DAVIS} dataset contains 150 video clips, among which 90 are densely foreground annotated. \cxj{what do you mean here? The foreground objects are annotated? what does "densely" mean? what is the relationship with the annotation and our inpainting?}
+The videos are complex with occlusions, fast motion, and various objects. 
 
-\noindent \textbf{Mask Setting.} Considering the real-world application, we use four kinds of mask settings in this paper. (1) Fixed square box: The square box mask is fixed through the whole video. (2) Moving square box: The position and size of the square mask change over frames. (3) Free-from mask: We apply irregular mask which imitates hand-drawn masks, following \cite{liu2018partialinpainting}, to each frame. (4) Foreground object mask: We use the foreground mask which lines out the object.
+\noindent \textbf{Mask Setting.} Considering various real-world applications, we test our method on four kinds of mask settings in this paper. 
+They are different in shapes and positions of the missing regions.
+\begin{enumerate}
+	\item Fixed square mask. The size and position of the missing square region are fixed through the whole video. 
+	\item Moving square mask. The position and size of the square mask change over frames. 
+	\item Free-from mask. We apply irregular mask which imitates hand-drawn masks on each frame, following \cite{liu2018partialinpainting}. 
+	\item Foreground object mask. This type of masks are defined to line out the foreground objects in videos.
+\end{enumerate}
 
-\noindent \textbf{Implementation Details.} In data preparation stage, we resize all video frames to $256\times256$ and randomly sample a clip from a video. 
-During training, we first train ENet and FNet jointly. Adam optimizer with $\beta=(0.9, 0.999)$ is used. Learning rate is set to 1e-4 for $G^E$ and $G^F$ , and 1e-5 for $D^E$. Then, the STI module is trained with fixed ENet and FNet, using Adam optimizer with $\beta=(0.9, 0.999)$. Learning rate is set to 1e-4 for $G^I$, and 4e-4 for $D^I$. We do not use weight decay in training.
+	
+\noindent \textbf{Implementation Details.} 
+In the data preparation stage, we random sample a clip \cxj{how long?} from each video in the datasets and resize the video frames into $256\times256$.
+%
+During training, we first train our ENet and FNet jointly using Adam optimizer with $\beta=(0.9, 0.999)$.
+The learning rate is set to $1e-4$ for $N^E$ and $G^F$ and 1e-5 for $D^E$. Then, the STINet is trained with the learning rate of 1e-4 for $G^I$, and 4e-4 for $D^I$. We do not use weight decay in training.
 As for the hyper-parameters, $\lambda_1=10.0,\lambda_2=\lambda_3=0.1,\lambda_4=300.0,\lambda_5=5.0$.
 
-\noindent \textbf{Evaluation Metrics.} (1) structural similarity index (SSIM) \cite{wang2004image}, (2) peak signal-to-noise ratio (PSNR), and (3) Fr{\'e}chet Inception Distance (FID) \cite{heusel2017gans} are used to evaluate our method. 
-Besides, since there is no ground truth for experiments of object removal, we carry out user study for this kind of mask setting. 
+\noindent \textbf{Evaluation Metrics.} 
+\mdf{We use three commonly-used metrics to quantitatively evaluate the performance of our method.} They are structural similarity index (SSIM) \cite{wang2004image}, peak signal-to-noise ratio (PSNR), and Fr{\'e}chet Inception Distance (FID) \cite{heusel2017gans}. 
+\cxj{Where these three metrics are used compared with object removal?}
+%
+Besides, since there is no ground truth for the experiments of object removal, we conduct a user study for this mask setting. 
 
 
 \subsection{Ablation Study}
-To demonstrate the effectiveness of several components in our STSENet, we conduct ablation study in this section. We only use the first three mask settings on YoutubeVOS.
+To demonstrate the effectiveness of the proposed components in our STSENet, we first conduct an ablation study. 
+We only use the first three mask settings on YoutubeVOS.
+\cxj{for what reason? page limit of the paper? How about others? Can we result in the same conclusion for different mask settings?}
 
-\noindent \textbf{Baselines.} Several variants of STSENet are defined in this section. (1) STI w/o flow: The Spatio-Temporal Inpainting network without flow guidance. (2) STI w/o edge: The Spatio-Temporal Inpainting network without structure guidance. (3) STSENet w/o $\mathcal{L}_{fec}$: The Spatio-Temporal Inpainting network with guidance of both structure and motion, but $\mathcal{L}_{fec}$ is not used. (4) STSENet is the model which uses all modules proposed in this paper. 
+\noindent \textbf{Baselines.} Several variants of STSENet are defined as following. (1) STI w/o flow: The Spatio-Temporal Inpainting network without flow guidance \cxj{with or without EdgeNet and SEM?}. (2) STI w/o edge: The Spatio-Temporal Inpainting network without structure guidance. (3) STSENet w/o $\mathcal{L}_{fec}$: The Spatio-Temporal Inpainting network with guidance of both structure and motion, but $\mathcal{L}_{fec}$ is not used. (4) STSENet is the model which uses all modules proposed in this paper. 
 
 
 
