@@ -1,6 +1,6 @@
 \begin{figure*}[t]
 	\centering
-	\includegraphics[width=1.5\columnwidth]{viszong} % Reduce the figure size so that it is slightly narrower than the column. Don't use precise values for figure width.This setup will avoid overfull boxes. 
+	\includegraphics[width=2.0\columnwidth]{viszong} % Reduce the figure size so that it is slightly narrower than the column. Don't use precise values for figure width.This setup will avoid overfull boxes. 
 	\caption{Visualization.}
 	\label{viszong}
 \end{figure*}
@@ -73,55 +73,7 @@ After exploring the edge structure, the inpainted frames become obviously better
 Thus, it is crucial to explore spatial details when inpainting the videos.
 These results also show the strong edge inpainting ability of ENet.
 
-\begin{table}[t]
-	\caption{The effect of structure clues and temporal smoothening in STSENet. The mask number denotes the indexes of mask setting in the section Experimental Settings. We compare STI,STI w/o SEM, and  in three aspects of metrics.}\smallskip
-	\centering
-	\resizebox{.95\columnwidth}{!}{
-		\smallskip\begin{tabular}{c|c|c|c|c}
-			\hline
-			Mask &Method  & PSNR & SSIM & FID\\
-			\hline
-			\multirow{3}*{Fixed}&STI &  &  & \\
-			\cline{2-5} 
-			&  STI w/o edge   &  &  & \\
-			\cline{2-5} 
-			&  STI w/o flow  &  &  & \\
-			\hline
-			
-			\multirow{3}*{Moved}&STI &  &  & \\
-			\cline{2-5} 
-			&  STI w/o edge   &  &  & \\
-			\cline{2-5} 
-			&  STI w/o flow   &  &  & \\
-			\hline
-			\multirow{3}*{Free}&STI &  &  & \\
-			\cline{2-5} 
-			&  STI w/o edge   &  &  & \\
-			\cline{2-5} 
-			&  STI w/o flow   &  &  & \\
-			\hline
-		\end{tabular}
-	}
-	\label{tab:edge}
-\end{table}
-%We test baselines, 
 
-\begin{table}[t]
-	\caption{The effect of structure clues and temporal smoothening in STSENet. The mask number denotes the indexes of mask setting in the section Experimental Settings. We compare STI,STI w/o SEM, and  in three aspects of metrics.}\smallskip
-	\centering
-	\resizebox{.95\columnwidth}{!}{
-		\smallskip\begin{tabular}{c|c|c|c|c}
-			\hline
-			Mask &Method  & PSNR & SSIM & FID\\
-			\hline
-			\multirow{2}*{Fixed}&STI+ edge attention &  &  & \\
-			\cline{2-5} 
-			&  STI + SEM   &  &  & \\
-			\hline
-		\end{tabular}
-	}
-	\label{tab:sem}
-\end{table}
 
 \noindent \textbf{Effect of Temporal Smoothening in STSENet.}
 Temporal Consistency is an important factor in video inpainting. In STSENet, we utilize a flow warping loss to smoothen the artificial flickers and propagate complementary information from neighboring frames. 
@@ -131,6 +83,16 @@ As shown in Table~\ref{tab:edge}, STI works better than STI w/o flow, values...!
 The visualized results are shown in Fig.~\ref{}.
 It can be observed that the Flickers are alleviated when motion guidance is involved. 
 Both the quantitative and qualitative results prove that the motion information is beneficial to temporal consistency..
+
+
+\begin{figure}[t]
+	\centering
+	\includegraphics[width=1.0\columnwidth]{flow_vis} % Reduce the figure size so that it is slightly narrower than the column. Don't use precise values for figure width.This setup will avoid overfull boxes. 
+	\caption{Visualization.}
+	\label{flow_vis}
+\end{figure}
+
+
 
 \begin{figure}[t]
 	\centering
@@ -144,33 +106,40 @@ Flow-edge consistency loss $\mathcal{L}_{fec}$ is designed for mutual improvemen
 To demonstrate the effectiveness of $\mathcal{L}_{fec}$ in training, we compare the performances between STSENet w/o $\mathcal{L}_{fec}$ and STSENet. We use standard end-point-error (EPE) metric to evaluate the completion of optical flow. Besides, the well-completed flow and edge aid the final inpainting results, so the quality of final inpainting results also reflects the impact of $\mathcal{L}_{fec}$.
 The quantitative results are shown in Table~\ref{tab:lfec}. It indicates that $\mathcal{L}_{fec}$ plays a positive role in prediction of flow and edge, which is helpful for video inpainting. The visulization results in Fig.~\ref{flowvis} shows that $\mathcal{L}_{fec}$ encourages the network to predict more accurate optical flow along the boundaries, which demonstrates the mutual improvement between flow and edge maps.
 \begin{table}[t]
-	\caption{The Impact of Flow-Edge Consistency Loss.}\smallskip
-	
+	\caption{The effect of structure clues and temporal smoothening in STSENet. The mask number denotes the indexes of mask setting in the section Experimental Settings. We compare STI,STI w/o SEM, and  in three aspects of metrics.}\smallskip
 	\centering
 	\resizebox{.95\columnwidth}{!}{
-		\smallskip\begin{tabular}{c|c|c|c|c|c}
+		\smallskip\begin{tabular}{c|c|c|c|c|c|c|c|c|c }
 			\hline
-			\multirow{2}*{Mask}& \multirow{2}*{Method} &Flow Completion & \multicolumn{3}{c}{Video Inpainting}\\
-			\cline{3-6} 
-			& &EPE & PSNR & SSIM & FID\\
+			&\multicolumn{3}{c|}{Fixed Square}& \multicolumn{3}{c|}{Moving Square}&\multicolumn{3}{c}{Free-Form}\\
+			\cline{2-10} 
+			&PSNR & SSIM & FID & PSNR & SSIM & FID & PSNR & SSIM & FID\\
 			\hline
-			\multirow{2}*{1}&STSENet w/o $\mathcal{L}_{fec}$&  &  & \\
-			\cline{2-6} 
-			&  STSENet     &  &  & \\
+			STI &28.0174 &0.9494  &  42.7164   &	
+			33.8131 &  0.9705  &8.2390	& 
+			30.0680& 0.9390 & 20.6358
+			\\
+			\hline
+			+edge input  &29.5242 &  0.9520& 36.2097   &	
+			37.6630	& 0.9798 &3.5161    &	
+			33.8206	&0.9659  &    6.6651  \\
 			\hline
 			
-			\multirow{2}*{2}&STSENet w/o $\mathcal{L}_{fec}$&  &  & \\
-			\cline{2-6} 
-			&  STSENet    &  &  & \\
+			+SEM &29.9918 &  0.9533 &  27.4198  &	
+			38.2433	& 0.9807 &   2.5083  &	
+			35.7783	&0.9712  &   5.8786  \\
+			\hline
+			
+			+flow &\textbf{30.0590} &\textbf{0.9543}&   \textbf{27.2431}  &
+			\textbf{38.8186} & \textbf{0.9824} & \textbf{2.3455} &
+			\textbf{35.9613}  & \textbf{0.9721}&  \textbf{ 5.8694} \\
 			
 			\hline
-			\multirow{2}*{3}&STSENet w/o $\mathcal{L}_{fec}$&  &  & \\
-			\cline{2-6} 
-			&  STSENet   &  &  & \\
-			\hline
+			
+			
 		\end{tabular}
 	}
-	\label{tab:lfec}
+	\label{tab:edge}
 \end{table}
 
 
@@ -185,51 +154,53 @@ We also give qualitative results in Fig.~\ref{viszong}. Compared with existing m
 	
 	\centering
 	\resizebox{.95\columnwidth}{!}{
-		\smallskip\begin{tabular}{c|c|c|c|c }
+		\smallskip\begin{tabular}{c|c|c|c|c|c|c|c|c|c }
 			\hline
-			Mask &Method  & PSNR & SSIM & FID\\
+			&\multicolumn{3}{c|}{Fixed Square}& \multicolumn{3}{c|}{Moving Square}&\multicolumn{3}{c}{Free-Form}\\
+			\cline{2-10} 
+			&PSNR & SSIM & FID & PSNR & SSIM & FID & PSNR & SSIM & FID\\
 			\hline
-			\multirow{4}*{1}&\cite{nazeri2019edgeconnect} &  &  & \\
-			\cline{2-5} 
-			&  \cite{wang2019video}  &  &  & \\
-			\cline{2-5} 
-			&  \cite{Xu_2019_CVPR}  &  &  & \\
-			\cline{2-5} 
-			&  \cite{Kim_2019_CVPR1}  &  &  & \\
-			\cline{2-5} 	
-			&  STSENet  &  &  & \\
+			Nazeri et al. &28.6446 &0.9484  &   38.2116  &	
+			30.7478 & 0.9647 &  16.2739  &
+			25.6693  & 0.9088 &  43.0366 \\
 			\hline
-			
-			\multirow{4}*{2}&\cite{nazeri2019edgeconnect} &  &  & \\
-			\cline{2-5} 
-			&  \cite{wang2019video}  &  &  & \\
-			\cline{2-5} 
-			&  \cite{Xu_2019_CVPR}  &  &  & \\
-			\cline{2-5} 
-			&  \cite{Kim_2019_CVPR1}  &  &  & \\
-			\cline{2-5} 	
-			&  STSENet  &  &  & \\
+			Wang et al. &27.9668 & 0.9515 &  40.7199  &	 
+			31.5776	& 0.9678 &  13.8383&   
+			32.1862 & 0.9626 & 19.1191  \\
 			\hline
 			
-			\multirow{4}*{3}&\cite{nazeri2019edgeconnect} &  &  & \\
-			\cline{2-5} 
-			&  \cite{wang2019video}  &  &  & \\
-			\cline{2-5} 
-			&  \cite{Xu_2019_CVPR}  &  &  & \\
-			\cline{2-5} 
-			&  \cite{Kim_2019_CVPR1}  &  &  & \\
-			\cline{2-5} 	
-			&  STSENet  &  &  & \\
+			
+			Kim et al. b& 28.0846&0.9468 &  39.9377  & 
+			36.8598	& 0.9728 &7.2315  &
+			33.5549	& 0.9646 & 9.3797  \\
+			\hline
+			Xu et al. &29.0531 & 0.9497 &  32.8860  & 
+			35.9941& 0.9772 &6.3746  &
+			32.6287 &0.9618  &  11.1501 \\
+			\hline
+			STSENet &\textbf{30.0590} &\textbf{0.9543}&   \textbf{27.2431} &
+			\textbf{38.8186} & \textbf{0.9824} & \textbf{2.3455} &
+			\textbf{35.9613}  & \textbf{0.9721}&  \textbf{ 5.8694} \\
+			
 			\hline
 			
-		
+			
 		\end{tabular}
 	}
-	\label{tab:com}
+	\label{tab:sem}
 \end{table}
 
 \subsection{User Study}
 Evaluation metrics can not fully reflect the quality of inpainted videos. So in addition to qualitative comparison, we also conduct a user study to evaluate our method. To
+
+
+\begin{figure}[t]
+	\centering
+	\includegraphics[width=1.0\columnwidth]{vis_forg} % Reduce the figure size so that it is slightly narrower than the column. Don't use precise values for figure width.This setup will avoid overfull boxes. 
+	\caption{Visualized object foreground removal.}
+	\label{vis_forg}
+\end{figure}
+
 
 
 \section{Conclusion}
