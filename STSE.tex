@@ -31,7 +31,7 @@
 % For /Author, add all authors within the parentheses, separated by commas. No accents or commands.
 % For /Title, add Title in Mixed Case. No accents or commands. Retain the parentheses.
  \pdfinfo{
-/Title (Spatio-Temporal Structure Enhancement Network)
+/Title (Spatio-Temporal Structure Enhancement for video inpainting)
 /Author (Anomymous sumbission)
 } %Leave this	
 % /Title ()
@@ -92,7 +92,7 @@
 %
 \setlength\titlebox{2.5in} % If your paper contains an overfull \vbox too high warning at the beginning of the document, use this
 % command to correct it. You may not alter the value below 2.5 in
-\title{Temporal-Spatial Consistency Aware Video Inpainting }
+\title{Spatio-Temporal Structure Enhancement for video inpainting}
 %Your title must be in mixed case, not sentence case. 
 % That means all verbs (including short verbs like be, is, using,and go), 
 % nouns, adverbs, adjectives should be capitalized, including both words in hyphenated terms, while
@@ -105,12 +105,13 @@
 
 \begin{abstract}
 	Video inpainting targets to fill the missing regions in videos, which requires high spatio-temporal consistency.
-	However, recent deep-learning based methods focus on temporally smoothening inpainted frames via motion information, which lack an effective mechanism to explore detailed structure clues.
-	In this paper, we propose a novel Spatio-Temporal Structure Enhancement Network (STSENet) for video inpainting, which simultaneously considers temporal continuity and detailed structure enhancement. 
-	Specifically, STSENet first synthesizes missing optical flow and detailed edge across frames, which are associated with a flow-edge consistency constraint for mutual improvements.
-	Then, both edge-preserved flow and temporal coherent edge are used to promote video frame generation, via a structure enhancement mechanism and a flow-guided propagation.
-	Consequently, the inpainted frames by STSENet are both temporally stabilized and visually pleasing in detailed structures, with low time cost. 
-	Experiments on YouTubeVOS and DAVIS show that STSENet obtains state-of-the-art performance and few artificial flickers, which demonstrate the significance of simultaneous temporal smoothening and structure enhancement in video inpainting.
+	However, recent deep-learning based methods focus on temporally smoothening inpainted frames via motion information, but the detailed structure clues are much less explored.
+	In this paper, we propose a novel Spatio-temporal Structure Enhancement Network (SSENet) for structure-preserved video inpainting. 
+	Specifically, SSENet first synthesizes the edge information across frames, based on an encoder-decoder with heterogeneous receptive field. Then, a coarse-to-fine adversarial model is designed for frame inpainting.
+	Explicitly, a structure attention module is developed to extract the spatial correlation between video contents and completed edge. This can facilitate the structure-enhanced video inpainting.  
+	Meanwhile, the missing flow is also predicted to ensure the temporal consistency of both edge and video frames, via flow-guided warping and temporal ensemble.  
+	Consequently, the inpainted frames by SSENet are visually pleasing in detailed structures and temporally stabilized, with low time cost. 
+	Experiments on YouTubeVOS and DAVIS show that SSENet obtains state-of-the-art performance and few artifacts, which demonstrate the significance of structure enhancement in video inpainting.
 	
 \end{abstract}
 
