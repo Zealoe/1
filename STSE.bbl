@@ -11,8 +11,8 @@ Gatys, L.~A.; Ecker, A.~S.; and Bethge, M.
   }{2017}]{heusel2017gans}
 Heusel, M.; Ramsauer, H.; Unterthiner, T.; Nessler, B.; and Hochreiter, S.
 \newblock 2017.
-\newblock Gans trained by a two time-scale update rule converge to a local nash
-  equilibrium.
+\newblock G{AN}s trained by a two time-scale update rule converge to a local
+  nash equilibrium.
 \newblock In {\em Advances in Neural Information Processing Systems},
   6626--6637.
 
@@ -59,7 +59,7 @@ Liu, G.; Reda, F.~A.; Shih, K.~J.; Wang, T.-C.; Tao, A.; and Catanzaro, B.
   }{2019}]{nazeri2019edgeconnect}
 Nazeri, K.; Ng, E.; Joseph, T.; Qureshi, F.; and Ebrahimi, M.
 \newblock 2019.
-\newblock Edgeconnect: Generative image inpainting with adversarial edge
+\newblock Edge{C}onnect: Generative image inpainting with adversarial edge
   learning.
 \newblock {\em arXiv preprint arXiv:1901.00212}.
 
@@ -82,7 +82,7 @@ Patwardhan, K.~A.; Sapiro, G.; and Bertalm{\'\i}o, M.
 Pont-Tuset, J.; Perazzi, F.; Caelles, S.; Arbel\'aez, P.; Sorkine-Hornung, A.;
   and {Van Gool}, L.
 \newblock 2017.
-\newblock The 2017 davis challenge on video object segmentation.
+\newblock The 2017 {DAVIS} challenge on video object segmentation.
 \newblock {\em arXiv:1704.00675}.
 
 \bibitem[\protect\citeauthoryear{Sajjadi, Scholkopf, and
@@ -94,12 +94,20 @@ Sajjadi, M. S.~M.; Scholkopf, B.; and Hirsch, M.
 \newblock In {\em The IEEE International Conference on Computer Vision}.
 
 \bibitem[\protect\citeauthoryear{Wang \bgroup et al\mbox.\egroup
+  }{}]{wang2018high}
+Wang, T.-C.; Liu, M.-Y.; Zhu, J.-Y.; Tao, A.; Kautz, J.; and Catanzaro, B.
+\newblock High-resolution image synthesis and semantic manipulation with
+  conditional {GAN}s.
+\newblock In {\em {The IEEE Conference on Computer Vision and Pattern
+  Recognition}, year={2018}}.
+
+\bibitem[\protect\citeauthoryear{Wang \bgroup et al\mbox.\egroup
   }{2004}]{wang2004image}
 Wang, Z.; Bovik, A.~C.; Sheikh, H.~R.; Simoncelli, E.~P.; et~al.
 \newblock 2004.
 \newblock Image quality assessment: from error visibility to structural
   similarity.
-\newblock {\em IEEE transactions on image processing} 13(4):600--612.
+\newblock {\em IEEE Transactions on Image Processing} 13(4):600--612.
 
 \bibitem[\protect\citeauthoryear{Wang \bgroup et al\mbox.\egroup
   }{2019}]{wang2019video}
@@ -128,10 +136,12 @@ Xiong, W.; Yu, J.; Lin, Z.; Yang, J.; Lu, X.; Barnes, C.; and Luo, J.
 
 \bibitem[\protect\citeauthoryear{Xu \bgroup et al\mbox.\egroup
   }{2018}]{xu2018youtube}
-Xu, N.; Yang, L.; Fan, Y.; Yue, D.; Liang, Y.; Yang, J.; and Huang, T.
+Xu, N.; Yang, L.; Fan, Y.; Yang, J.; Yue, D.; Liang, Y.; Price, B.; Cohen, S.;
+  and Huang, T.
 \newblock 2018.
-\newblock Youtube-vos: A large-scale video object segmentation benchmark.
-\newblock {\em arXiv preprint arXiv:1809.03327}.
+\newblock Youtube-vos: Sequence-to-sequence video object segmentation.
+\newblock In {\em Proceedings of the European Conference on Computer Vision
+  (ECCV)},  585--601.
 
 \bibitem[\protect\citeauthoryear{Xu \bgroup et al\mbox.\egroup
   }{2019}]{Xu_2019_CVPR}
