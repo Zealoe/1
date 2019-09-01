@@ -1,5 +1,34 @@
 \begin{thebibliography}{}
 
+\bibitem[\protect\citeauthoryear{Ballester \bgroup et al\mbox.\egroup
+  }{2001}]{ballester2001filling}
+Ballester, C.; Bertalmio, M.; Caselles, V.; Sapiro, G.; and Verdera, J.
+\newblock 2001.
+\newblock Filling-in by joint interpolation of vector fields and gray levels.
+\newblock {\em IEEE Transactions on Image Processing} 10(8):1200--1211.
+
+\bibitem[\protect\citeauthoryear{Bertalmio \bgroup et al\mbox.\egroup
+  }{2000}]{bertalmio2000image}
+Bertalmio, M.; Sapiro, G.; Caselles, V.; and Ballester, C.
+\newblock 2000.
+\newblock Image inpainting.
+\newblock In {\em Proceedings of the 27th annual conference on Computer
+  graphics and interactive techniques},  417--424.
+
+\bibitem[\protect\citeauthoryear{Bertalmio \bgroup et al\mbox.\egroup
+  }{2003}]{bertalmio2003simultaneous}
+Bertalmio, M.; Vese, L.; Sapiro, G.; and Osher, S.
+\newblock 2003.
+\newblock Simultaneous structure and texture image inpainting.
+\newblock {\em IEEE Transactions on Image Processing} 12(8):882--889.
+
+\bibitem[\protect\citeauthoryear{Efros and Freeman}{2001}]{efros2001image}
+Efros, A.~A., and Freeman, W.~T.
+\newblock 2001.
+\newblock Image quilting for texture synthesis and transfer.
+\newblock In {\em Proceedings of the 28th annual conference on Computer
+  graphics and interactive techniques}.
+
 \bibitem[\protect\citeauthoryear{Gatys, Ecker, and
   Bethge}{2015}]{gatys2015neural}
 Gatys, L.~A.; Ecker, A.~S.; and Bethge, M.
@@ -15,6 +44,20 @@ Heusel, M.; Ramsauer, H.; Unterthiner, T.; Nessler, B.; and Hochreiter, S.
   nash equilibrium.
 \newblock In {\em Advances in Neural Information Processing Systems},
   6626--6637.
+
+\bibitem[\protect\citeauthoryear{Huang \bgroup et al\mbox.\egroup
+  }{2016}]{huang2016temporally}
+Huang, J.-B.; Kang, S.~B.; Ahuja, N.; and Kopf, J.
+\newblock 2016.
+\newblock Temporally coherent completion of dynamic video.
+\newblock {\em ACM Transactions on Graphics (TOG)} 35(6):196.
+
+\bibitem[\protect\citeauthoryear{Iizuka, Simo-Serra, and
+  Ishikawa}{2017}]{iizuka2017globally}
+Iizuka, S.; Simo-Serra, E.; and Ishikawa, H.
+\newblock 2017.
+\newblock Globally and locally consistent image completion.
+\newblock {\em ACM Transactions on Graphics (ToG)} 36(4):107.
 
 \bibitem[\protect\citeauthoryear{Ilg \bgroup et al\mbox.\egroup
   }{2017}]{Flownet_2017_CVPR}
@@ -70,6 +113,14 @@ Newson, A.; Almansa, A.; Fradet, M.; Gousseau, Y.; and P{\'e}rez, P.
 \newblock Video inpainting of complex scenes.
 \newblock {\em SIAM Journal on Imaging Sciences} 7(4):1993--2019.
 
+\bibitem[\protect\citeauthoryear{Pathak \bgroup et al\mbox.\egroup
+  }{2016}]{pathak2016context}
+Pathak, D.; Krahenbuhl, P.; Donahue, J.; Darrell, T.; and Efros, A.~A.
+\newblock 2016.
+\newblock Context encoders: Feature learning by inpainting.
+\newblock In {\em The IEEE Conference on Computer Vision and Pattern
+  Recognition}.
+
 \bibitem[\protect\citeauthoryear{Patwardhan, Sapiro, and
   Bertalm{\'\i}o}{2007}]{patwardhan2007video}
 Patwardhan, K.~A.; Sapiro, G.; and Bertalm{\'\i}o, M.
@@ -99,7 +150,7 @@ Wang, T.-C.; Liu, M.-Y.; Zhu, J.-Y.; Tao, A.; Kautz, J.; and Catanzaro, B.
 \newblock High-resolution image synthesis and semantic manipulation with
   conditional {GAN}s.
 \newblock In {\em {The IEEE Conference on Computer Vision and Pattern
-  Recognition}, year={2018}}.
+  Recognition}, year={2018},}.
 
 \bibitem[\protect\citeauthoryear{Wang \bgroup et al\mbox.\egroup
   }{2004}]{wang2004image}
@@ -126,6 +177,12 @@ Wang, C.; Huang, H.; Han, X.; and Wang, J.
 \newblock {\em IEEE Transactions on Pattern Analysis and Machine Intelligence}
   29(3):463--476.
 
+\bibitem[\protect\citeauthoryear{Xie, Xu, and Chen}{2012}]{xie2012image}
+Xie, J.; Xu, L.; and Chen, E.
+\newblock 2012.
+\newblock Image denoising and inpainting with deep neural networks.
+\newblock In {\em Advances in neural information processing systems}.
+
 \bibitem[\protect\citeauthoryear{Xiong \bgroup et al\mbox.\egroup
   }{2019}]{Xiong_2019_CVPR}
 Xiong, W.; Yu, J.; Lin, Z.; Yang, J.; Lu, X.; Barnes, C.; and Luo, J.
@@ -135,11 +192,11 @@ Xiong, W.; Yu, J.; Lin, Z.; Yang, J.; Lu, X.; Barnes, C.; and Luo, J.
   Recognition}.
 
 \bibitem[\protect\citeauthoryear{Xu \bgroup et al\mbox.\egroup
-  }{2018}]{xu2018youtube}
+  }{2018}]{xu2018Youtube}
 Xu, N.; Yang, L.; Fan, Y.; Yang, J.; Yue, D.; Liang, Y.; Price, B.; Cohen, S.;
   and Huang, T.
 \newblock 2018.
-\newblock Youtube-vos: Sequence-to-sequence video object segmentation.
+\newblock You{T}ube-{VOS}: Sequence-to-sequence video object segmentation.
 \newblock In {\em Proceedings of the European Conference on Computer Vision
   (ECCV)},  585--601.
 
