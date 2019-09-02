@@ -30,7 +30,7 @@ The video frames are resized into $256\times256$.
 %
 The training process consists of three steps.
 First, we  train the ENet and FNet jointly using Adam optimizer with $\beta=(0.9, 0.999)$.
-The learning rate is set to $1e-4$ for $N^E$ and $G^F$ and $1e-5$ for $D^E$. Then, the STINet is trained with the learning rate of $1e-4$ for $G^I$, and $4e-4$ for $D^I$. Finally, the temporal ensemble module is trained with the learning rate of $1e-4$.  We do not use weight decay in training.
+The learning rate is set to $1e-4$ for $N^E$ and $G^F$ and $1e-5$ for $D^E$. Then, the TINet is trained with the learning rate of $1e-4$ for $G^I$, and $4e-4$ for $D^I$. Finally, we fix the former parts and train the temporal ensemble module with the learning rate of $1e-4$. We do not use weight decay in training.
 As for the hyper-parameters, $\lambda_1=10.0,\lambda_2=5.0, \lambda_3=0.1$.
 
 \noindent \textbf{Evaluation Metrics.} 
@@ -55,12 +55,12 @@ Besides, the quantitative metrics can not be used in the experiments of foregrou
 \subsection{Ablation Study}
 To demonstrate the effectiveness of proposed components in our method, we first conduct ablation study on YouTubeVOS. 
 
-\subsubsection{Effect of Structure Clues in STINet.}
+\subsubsection{Effect of Structure Clues in TINet.}
 
 
 
 To evaluate the effects of structural information in video inpainting, we successively add different parts to the baseline and compare their performances. Three variants are used: 'STI', '+edge input', and '+SAM'. 
-'STI' is the baseline using only spatio-temporal inpainting network, without either structure clues or temporal information. '+edge input' is the model that uses the predicted edge maps as input. '+SAM' is the model to which structure attention module is applied.
+'STI' is the baseline using only texture inpainting network, without either structure clues or temporal information. '+edge input' is the model that uses the predicted edge maps as input. '+SAM' is the model to which structure attention module is applied.
 \begin{figure}[!ht]
 	\centering
 	\includegraphics[width=0.97\columnwidth]{edgevis} % Reduce the figure size so that it is slightly narrower than the column. Don't use precise values for figure width.This setup will avoid overfull boxes. 
@@ -96,7 +96,7 @@ Thus, it is crucial to explore structural details when inpainting the videos.
 	\label{flow_vis}
 \end{figure}
 
-\subsubsection{Effect of Temporal Information in STINet.}
+\subsubsection{Effect of Temporal Information in TINet.}
 Temporal consistency is also an important factor in video inpainting. In our method, we utilize temporal information from the inpainted flows to smoothen the artificial flickers via the developed flow-guided warping and temporal ensemble module. 
 %We use '+flow' to denotes the model 
 First of all, we provide the visualized results in Fig.~\ref{flowvis}, where the proposed FNet can effectively complete the missing flows with fine boundaries.
@@ -140,6 +140,7 @@ We compare our results with state-of-the-art inpainting methods \cite{nazeri2019
 As shown in Table~\ref{tab:sem}, Our structure-oriented method achieves better results than other methods, which demonstrates the effectiveness of introducing structural clues into video inpainting.
 Specifically, the additional time cost brought by edge enhancement is negligible.
 When the flow inpainting module is removed in SOVI, the inference speed is almost twice faster, and our performance is still competitive.
+Notably, \cite{nazeri2019edgeconnect} is the image inpainting method which uses structure information. We surpass it by a large margin, which demonstrates that SOVI not a naive extension to utilize structure information in video inpainting.
 This indicates that structure clues can bring strong promotion to video inpainting, 
 We also give qualitative results in Fig.~\ref{viszong}. Compared with existing methods, inpainting results predicted by our method are more realistic with finer details. We can observe that the frames predicted by our method contain more sharper object contours. This is achieved by the effectiveness of structure information in video inpainting.
 

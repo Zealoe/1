@@ -7,6 +7,14 @@ Ballester, C.; Bertalmio, M.; Caselles, V.; Sapiro, G.; and Verdera, J.
 \newblock Filling-in by joint interpolation of vector fields and gray levels.
 \newblock {\em IEEE Transactions on Image Processing} 10(8):1200--1211.
 
+\bibitem[\protect\citeauthoryear{Barnes \bgroup et al\mbox.\egroup
+  }{2009}]{barnes2009patchmatch}
+Barnes, C.; Shechtman, E.; Finkelstein, A.; and Goldman, D.~B.
+\newblock 2009.
+\newblock Patchmatch: A randomized correspondence algorithm for structural
+  image editing.
+\newblock In {\em ACM Transactions on Graphics (ToG)}, volume~28, ~24.
+
 \bibitem[\protect\citeauthoryear{Bertalmio \bgroup et al\mbox.\egroup
   }{2000}]{bertalmio2000image}
 Bertalmio, M.; Sapiro, G.; Caselles, V.; and Ballester, C.
