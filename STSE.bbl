@@ -29,13 +29,6 @@ Efros, A.~A., and Freeman, W.~T.
 \newblock In {\em Proceedings of the 28th annual conference on Computer
   graphics and interactive techniques}.
 
-\bibitem[\protect\citeauthoryear{Gatys, Ecker, and
-  Bethge}{2015}]{gatys2015neural}
-Gatys, L.~A.; Ecker, A.~S.; and Bethge, M.
-\newblock 2015.
-\newblock A neural algorithm of artistic style.
-\newblock {\em arXiv preprint arXiv:1508.06576}.
-
 \bibitem[\protect\citeauthoryear{Heusel \bgroup et al\mbox.\egroup
   }{2017}]{heusel2017gans}
 Heusel, M.; Ramsauer, H.; Unterthiner, T.; Nessler, B.; and Hochreiter, S.
@@ -135,14 +128,6 @@ Pont-Tuset, J.; Perazzi, F.; Caelles, S.; Arbel\'aez, P.; Sorkine-Hornung, A.;
 \newblock 2017.
 \newblock The 2017 {DAVIS} challenge on video object segmentation.
 \newblock {\em arXiv:1704.00675}.
-
-\bibitem[\protect\citeauthoryear{Sajjadi, Scholkopf, and
-  Hirsch}{2017}]{Sajjadi_2017_ICCV}
-Sajjadi, M. S.~M.; Scholkopf, B.; and Hirsch, M.
-\newblock 2017.
-\newblock Enhancenet: Single image super-resolution through automated texture
-  synthesis.
-\newblock In {\em The IEEE International Conference on Computer Vision}.
 
 \bibitem[\protect\citeauthoryear{Wang \bgroup et al\mbox.\egroup
   }{}]{wang2018high}
