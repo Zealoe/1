@@ -37,6 +37,14 @@ Efros, A.~A., and Freeman, W.~T.
 \newblock In {\em Proceedings of the 28th annual conference on Computer
   graphics and interactive techniques}.
 
+\bibitem[\protect\citeauthoryear{He \bgroup et al\mbox.\egroup
+  }{2016}]{He_2016_CVPR}
+He, K.; Zhang, X.; Ren, S.; and Sun, J.
+\newblock 2016.
+\newblock Deep residual learning for image recognition.
+\newblock In {\em The IEEE Conference on Computer Vision and Pattern
+  Recognition}.
+
 \bibitem[\protect\citeauthoryear{Heusel \bgroup et al\mbox.\egroup
   }{2017}]{heusel2017gans}
 Heusel, M.; Ramsauer, H.; Unterthiner, T.; Nessler, B.; and Hochreiter, S.

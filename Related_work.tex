@@ -9,7 +9,7 @@ Though great progress has been made in 2D image inpainting using deep learning t
 \begin{figure}[t]
 	\centering
 	\includegraphics[width=1.0\columnwidth]{zong} % Reduce the figure size so that it is slightly narrower than the column. Don't use precise values for figure width.This setup will avoid overfull boxes. 
-	\caption{The overall pipeline of SOVI. The ENet first completes the missing edge across frames. Then, under the guidance of structural edge, TINet can produce structure-preserved inpainting frame. Moreover, the FNet is designed to predict missing optical flow, which provides temporally consistency to the final result.}
+	\caption{The overall pipeline of SOVI. The ENet first completes the missing edge across frames. Then, under the guidance of structural edge, TexNet can produce structure-preserved inpainting frame. Moreover, the FNet is designed to predict missing optical flow, which provides temporally consistency to the final result.}
 	\label{zong}
 \end{figure}
 
@@ -46,9 +46,9 @@ The key insight of SOVI is to explore the correlation among structure, motion, a
 %We  predict the edges, which well represents structure information. To embed  
 %\cxj{Explain more about the concept. not the modules.}
 As shown in Fig.~\ref{zong}, our method consists of three modules, which are respectively the edge inpainting network (ENet), flow inpainting network (FNet), and texture inpainting network (TINet).
-Given frames with missing pixels, ENet first completes the edge maps that indicate the detailed structure information. Then, under the guidance of completed edge, TINet is developed to fill the missing colors and textures in a coarse-to-fine manner.
+Given frames with missing pixels, ENet first completes the edge maps that indicate the detailed structure information. Then, under the guidance of completed edge, TexNet is developed to fill the missing colors and textures in a coarse-to-fine manner.
 Specifically, a structure attention module is designed to capture the latent spatial relevance between video textures and structure edges.
-Compared with original edge maps, the structure-texture relevance is easier to be embedded into TINet, which benefits fine-detailed frame generation.
+Compared with original edge maps, the structure-texture relevance is easier to be embedded into TexNet, which benefits fine-detailed frame generation.
 Besides, the developed FNet can predict the missing optical flow, which provides auxiliary motion knowledge. Explicitly, a flow-edge consistency constraint and a temporal ensemble module are utilized to smoothen the edge maps and final inpainted frames, based on the motion tendency. Consequently, the inpainted frames by SOVI are not only detail-preserved but also temporal consistent.
 %\cxj{This is about 'how', not about 'why'.}
 %by simultaneously exploring optical flow and , to eliminate temporal flickers and enhance spatial detail. 
@@ -185,7 +185,7 @@ Different from the methods above, SOVI extract and refine structure information 
 %\begin{figure}[t]
 %	\centering
 %	\includegraphics[width=1.0\columnwidth]{zong} % Reduce the figure size so that it is slightly narrower than the column. Don't use precise values for figure width.This setup will avoid overfull boxes. 
-%	\caption{The overall pipeline of SOVI. The ENet first completes the missing edge across frames. Then, under the guidance of structural edge, TINet can produce structure-preserved inpainting frame. Moreover, the FNet is designed to predict missing optical flow, which provides temporally consistency to the final result.}
+%	\caption{The overall pipeline of SOVI. The ENet first completes the missing edge across frames. Then, under the guidance of structural edge, TexNet can produce structure-preserved inpainting frame. Moreover, the FNet is designed to predict missing optical flow, which provides temporally consistency to the final result.}
 %	\label{zong}
 %\end{figure}
 %
@@ -193,9 +193,9 @@ Different from the methods above, SOVI extract and refine structure information 
 %In this paper, we present a novel structure-oriented video inpainting network (SOVI) that can collect and refine the structure information to improve the inpainting results. 
 %\cxj{Explain more about the concept. not the modules.}
 %As shown in Fig.~\ref{zong}, our method consists of three modules, which are respectively the edge inpainting network (ENet), flow inpainting network (FNet), and spatio-temporal inpainting network (TINet).
-%Given frames with missing pixels, ENet first completes the edge maps that indicate the detailed structure information. Then, under the guidance of completed edge, TINet is developed to fill the missing colors and textures in a coarse-to-fine manner.
+%Given frames with missing pixels, ENet first completes the edge maps that indicate the detailed structure information. Then, under the guidance of completed edge, TexNet is developed to fill the missing colors and textures in a coarse-to-fine manner.
 %Specifically, a structure attention module is designed to capture the latent spatial relevance between video contents and structure edges.
-%Compared with original edge maps, the structure-texture relevance is easier to be embedded into TINet, which benefits fine-detailed frames generation.
+%Compared with original edge maps, the structure-texture relevance is easier to be embedded into TexNet, which benefits fine-detailed frames generation.
 %Besides, the developed FNet can predict the missing optical flow, which provides auxiliary motion knowledge. Explicitly, a flow-edge consistency constraint and a temporal ensemble module are utilized to smoothen the edge maps and final inpainted frames, based on the motion tendency. Consequently, the inpainted frames by SOVI are not only detail-preserved but also temporal consistent.
 %\cxj{This is about 'how', not about 'why'.}
 %%by simultaneously exploring optical flow and , to eliminate temporal flickers and enhance spatial detail. 
