@@ -108,15 +108,7 @@
 The fundamental challenge that lies in video inpainting is the difficulty of generating spatio-temporally coherent video contents with fine details in the missing regions. Most existing methods fill the pixel colors in the missing regions and suffer from structure cracks and image blurs. In this paper, we present a novel structure-oriented video inpainting approach to tackle this problem. To produce complete and detailed structure in the missing region, we first synthesize edge maps that well represent scene structure and object shapes by an edge inpainting network. Then we replenish the colors and textures using a coarse-to-fine generation network under the guidance of the extracted structure. This is achieved by a newly designed structure attention module that explores the correlation between video contents and structural edges. 
 %
 Besides, we develop a flow inpainting network to estimate the flow filed in the missing regions, which can improve the temporal consistence by flow-guided warping and temporal ensemble. Consequently, the inpainted results using our approach are visually pleasing with spatio-temporal coherence as well as low computational cost. Experiments on the YouTubeVOS and DAVIS datasets show that our method obtains state-of-the-art performance and demonstrate the significance of structure preserving in video inpainting.
-%	Video inpainting targets to fill the missing regions in videos, which requires high spatio-temporal consistency.
-%	However, recent deep-learning based methods focus on temporally smoothening inpainted frames via motion information, but the detailed structure clues are much less explored.
-%	In this paper, we propose a novel Spatio-temporal Structure Enhancement Network (SSENet) for structure-preserved video inpainting. 
-%	Specifically, SSENet first synthesizes the edge information across frames, based on an encoder-decoder with heterogeneous receptive field. Then, a coarse-to-fine adversarial model is designed for frame inpainting.
-%	Explicitly, a structure attention module is developed to extract the spatial correlation between video contents and completed edge. This can facilitate the structure-enhanced video inpainting.  
-%	Meanwhile, the missing flow is also predicted to ensure the temporal consistency of both edge and video frames, via flow-guided warping and temporal ensemble.  
-%	Consequently, the inpainted frames by SSENet are visually pleasing in detailed structures and temporally stabilized, with low time cost. 
-%	Experiments on YouTubeVOS and DAVIS show that SSENet obtains state-of-the-art performance and few artifacts, which demonstrate the significance of structure enhancement in video inpainting.
-	
+
 \end{abstract}
 
 
@@ -126,6 +118,9 @@ Besides, we develop a flow inpainting network to estimate the flow filed in the 
 \input{Experiments}
 
 
+\section{Conclusion}
+In this paper, we propose a novel structure-oriented video inpainting method, which utilizes sturcture information to generate fine-detailed frames. We first complete edge maps, which indicate structure details in frames. Then we generate frames under the guidance of structure information. Besides, we synthesize missing optical flow to constrain the temporal consistency of final outputs.
+Experiments on YouTubeVOS and DAVIS datasets demonstrate the effectiveness of our method of utilizing structure preserving in video inpainting.
 
  
 
