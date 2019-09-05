@@ -12,7 +12,7 @@ Though great progress has been made in 2D image inpainting using deep learning t
 \begin{figure}[t]
 	\centering
 	\includegraphics[width=1.0\columnwidth]{zong} % Reduce the figure size so that it is slightly narrower than the column. Don't use precise values for figure width.This setup will avoid overfull boxes. 
-	\caption{Overview of our structure-guided inpainting network. We first completes the missing edges by aggregating information from neighboring frames to represent target structure using the EdgeNet. Then, the TexNet synthesizes textures under the structure guidance. Moreover, the FlowNet is designed to predict missing optical flow to enforce temporal coherence.}
+	\caption{Overview of our structure-guided inpainting network. We first completes the missing edges by aggregating information from neighboring frames to represent target structure using the ENet. Then, the TexNet synthesizes textures under the structure guidance. Moreover, the FNet is designed to predict missing optical flow to enforce temporal coherence.}
 	\label{zong}
 \end{figure}
 
@@ -44,13 +44,13 @@ To further enhance the temporal coherence of synthesized frames, we employ motio
 
 
 
-As shown in Fig.~\ref{zong}, our method consists of three modules, which are respectively an edge inpainting network (EdgeNet), a texture inpainting network (TexNet), and a flow inpainting network (FlowNet).
+As shown in Fig.~\ref{zong}, our method consists of three modules, which are respectively an edge inpainting network (ENet), a texture inpainting network (TexNet), and a flow inpainting network (FNet).
 %
 Given multiple adjacent frames with masks, ENet first completes edge maps that depict the target structure. 
 Then, under the guidance of the completed edges, TexNet fills the pixel colors and textures in a coarse-to-fine manner.
 A structure attention module is designed to capture the latent spatial relevance between video textures and edges.
 Compared with original edge maps, the structure-texture relevance is more efficiently embedded in TexNet, which benefits fine-detailed frame generation.
-Besides, the developed FlowNet predicts the missing optical flow, which provides auxiliary motion knowledge. 
+Besides, the developed FNet predicts the missing optical flow, which provides auxiliary motion knowledge. 
 Explicitly, a flow-edge consistency constraint and a temporal ensemble module are utilized to smoothen the edge maps and final inpainted frames. 
 Consequently, the inpainted frames using our approach are not only temporal consistent, but also complete in structure and rich in visual details.
  
@@ -67,7 +67,14 @@ Our technical contributions can be summarized as follows:
 \end{itemize}
 
 
-
+\begin{figure*}[ht]
+	\centering
+	\includegraphics[width=2.0\columnwidth]{sti} % Reduce the figure size so that it is slightly narrower than the column. Don't use precise values for figure width.This setup will avoid overfull boxes. 
+	\caption{The detailed architecture of our network. ENet adopts an encoder-decoder architecture to complete edges in the missing regions. TexNet utilizes a coarse-to-fine manner to inpaint the final frames. FNet predicts flows between adjacent frames for flow warping loss and temporal ensemble. }
+		%FNet is based on the backbone Resnet-101, which is associated with ENet.
+	 
+	\label{fig:stiNet}
+\end{figure*}
 
 
 \section{Related Work}
