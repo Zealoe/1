@@ -12,7 +12,7 @@ Though great progress has been made in 2D image inpainting using deep learning t
 \begin{figure}[t]
 	\centering
 	\includegraphics[width=1.0\columnwidth]{zong} % Reduce the figure size so that it is slightly narrower than the column. Don't use precise values for figure width.This setup will avoid overfull boxes. 
-	\caption{Overview of our structure-guided inpainting network. We first completes the missing edges by aggregating information from neighboring frames to represent target structure using the ENet. Then, the TexNet synthesizes textures under the structure guidance. Moreover, the FNet is designed to predict missing optical flow to enforce temporal coherence.}
+	\caption{Overview of our structure-guided inpainting network. We first completes the missing edges by aggregating information from neighboring frames to represent target structure using the ENet. The TexNet synthesizes textures under the structure guidance. Moreover, the FNet predicts missing optical flow to enforce temporal coherence.}
 	\label{zong}
 \end{figure}
 
@@ -100,8 +100,8 @@ To improve the photorealism of the completed results, a generative adversarial n
 Multiple discriminators can be used to constrain both global and local coherence of image contents \cite{iizuka2017globally}. 
 Subsequent approaches solve more specific problems in image inpainting, such as inpainting irregular holes with partial convolution~\cite{liu2018partialinpainting} and gated convolution \cite{yu2018free} for dynamic feature selection.
 %
-\mdf{While these methods tend to generate over-smoothed and blurry results, a two-stage approach is proposed to hallucinate edges first and then fill pixel colors using the edges as a prior \cite{nazeri2019edgeconnect}.}
-\mdf{Though high quality static images with reasonable structure can be generated using this method, simply extending it from image to video by 3D convolutions inevitably fails because of no guarantee on the temporal coherence.}
+While these methods tend to generate over-smoothed and blurry results, a two-stage approach is proposed to hallucinate edges first and then fill pixel colors using the edges as a prior \cite{nazeri2019edgeconnect}. 
+Though high quality static images with reasonable structure can be generated using this method, simply extending it from image to video by 3D convolutions inevitably fails because of no guarantee on the temporal coherence.
 %These image inpainting methods can obtain plausible synthesized images. 
 %\cite{nazeri2019edgeconnect} introduces an edge generator to refine generated structure in image inpainting. 
  

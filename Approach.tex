@@ -39,7 +39,7 @@ Finally, the inpainted edge maps are obtained by:
 The ENet is trained by playing a minimax game to optimize the generator $G^E$ and the discriminator $D^E$ as
 \begin{equation}
 \label{eq:loss_e}
-\mathcal{O}_{edge} =\min\limits_{G^E} \max \limits_{D^E} \big(\mathcal{L}^E_{adv}+\lambda_1 * \mathcal{L}^E_{fm}\big),
+\min\limits_{G^E} \max \limits_{D^E} \big(\mathcal{L}^E_{adv}+\lambda_1 * \mathcal{L}^E_{fm}\big),
 \end{equation}
 where $\mathcal{L}^E_{adv}$ and $\mathcal{L}^E_{fm}$ are the adversarial loss and feature matching loss. 
 $\lambda_1$ is a hyper-parameter to balance the three terms.
@@ -103,11 +103,11 @@ After introducing structural guidance, the inpainted content by TexNet becomes m
  
 
 
-To train the TexNet, we define the loss function as:
+The TexNet is train as:
 %
 \begin{equation}
 	\label{eq:1}
-		\mathcal{O}_{tex}=\min\limits_{G^T} \max \limits_{D^T} \big(\mathcal{L}^{T}_{rec}+\mathcal{L}^T_{adv}\big).
+		\min\limits_{G^T} \max \limits_{D^T} \big(\mathcal{L}^{T}_{rec}+\mathcal{L}^T_{adv}\big).
 \end{equation}
 %
 Inspired by \cite{nazeri2019edgeconnect}, the first term $\mathcal{L}^{T}_{rec}$ is the $l_1$-reconstruction loss to measure the difference between predicted video frames and the ground truth video frames $\widetilde{\boldsymbol{Y}}$.
@@ -142,7 +142,7 @@ where $G^I$ is the TexNet and $D^I$ has the similar architecture with $D^E$.}
 
 
 \begin{table*}[t]
-	\caption{Comparisons with existing methods on YouTubeVOS. To save space, the year of method is not listed.}\smallskip
+	\caption{Comparisons with four state-of-the-art methods proposed in 2019 on YouTubeVOS.}\smallskip
 	
 	\centering
 	\resizebox{2.0\columnwidth}{!}{
@@ -230,28 +230,30 @@ From the predicted optical flows $\boldsymbol{O}^i$, FNet estimates the flows in
 where $G^F$ denotes FNet, which consists of an encoder that uses ResNet101 \cite{He_2016_CVPR} as backbone and a decoder.
 %The detailed architecture of FNet is shown in Fig.~\ref{fig:stiNet}.
 
-To train the flow inpainting network, the loss function is given by:
-\begin{equation}
-	\label{eq:flow_all}
-	\mathcal{O}_{flow}=\min\limits_{G^F} \big(\mathcal{L}^F_{rec}+ \mathcal{L}^F_{har}+\mathcal{L}_{fec}\big),
-\end{equation}
-where $\mathcal{L}^F_{rec}$ and $\mathcal{L}^F_{har}$ are respectively $l_1$ loss and hard example mining loss in the missing regions, following the definition in \cite{Xu_2019_CVPR}. 
-%Specifically, $\mathcal{L}^F_{har}$ encourages the network to focus on those hard samples in order to avoid blurry texture.
-
-
 
 
 To enhance temporal consistency in the synthesized results, we apply the completed flows to warp the inpainted edge maps and compute the consistency between neighboring edge maps. 
 %
 Instead of separately training two subnetworks ENet and FNet, we train them jointly, because the temporal correlation and structural details can boost each other. 
-To achieve this goal, a flow-edge consistency loss is defined as:
+Therefore a flow-edge consistency loss is defined as:
 %
 \begin{equation}
 	\label{eq:flow_edge}
 	\mathcal{L}_{fec}=\sum_{k}\frac{1}{\left\|M_{t} \right\|_1}\left\|(E_{t}-\phi(O_{t\Rightarrow t-k},E_{t-k}))\odot M_{t}\right\|_1,
 \end{equation}
 where $\phi(O_{t\Rightarrow t-k},E_{t-k})$ is the warping operation which warps the edge map $E_{t-k}$ to the target frame according to the generated optical flow $O_{t\Rightarrow t-k}$.
-$k$ denotes the index of neighboring frames ($k\in \left\{-7,-3,+3,+7 \right\}$). Also, $\mathcal{L}_{fec}$ is added to Eq.~\eqref{eq:loss_e} for joint training of ENet and FNet.
+$k$ denotes the index of neighboring frames ($k\in \left\{-7,-3,+3,+7 \right\}$). 
+
+
+
+The total loss function for the flow inpainting network is given by:
+\begin{equation}
+\label{eq:flow_all}
+\mathcal{L}_{flow}=   \mathcal{L}^F_{rec}+ \mathcal{L}^F_{har}+\mathcal{L}_{fec},
+\end{equation}
+where $\mathcal{L}^F_{rec}$ and $\mathcal{L}^F_{har}$ are respectively $l_1$ loss and hard example mining loss in the missing regions, following the definition in \cite{Xu_2019_CVPR}. 
+%Specifically, $\mathcal{L}^F_{har}$ encourages the network to focus on those hard samples in order to avoid blurry texture.
+Also, $\mathcal{L}_{fec}$ is added to Eq.~\eqref{eq:loss_e} for joint training of ENet and FNet.
 %Specifically, $\mathcal{L}_{fec}$ warps the edge maps from neighboring frames to the target frame to penalize the reconstruction loss.
 %In terms of ENet, $\mathcal{L}_{fec}$ encourages the predicted edge maps to be temporally smoothing, which should conform to the motion tendency in the flow maps $\boldsymbol{O}$. 
 %In terms of FNet, $\mathcal{L}_{fec}$ constrains the model to focus on edges.
@@ -273,7 +275,7 @@ where $\mathcal{T}=\{t-7,t-3\}$. $\phi(O_{t\Rightarrow \widehat{t}},Y_{\widehat{
 %$O_{t\Rightarrow \widehat{t}}$ is predicted using the subsequent flow inpainting network.
 %$\mathcal{L}^I_{flo}$ expects that all the neighboring frames can be well warped to the target frame with small reconstruction loss.
 %
-$\mathcal{L}^T_{flo}$ is added to Eq.~\eqref{eq:1}.
+$\mathcal{L}^T_{flo}$ is added to Eq.~\eqref{eq:1} when training TexNet with flow warping.
 Finally, a temporal ensemble module is designed 
 to refine the current frame $Y_t$ by aggregating previous frames. %The architecture is shown in Fig.~\ref{fig:stiNet}. 
 This module is trained with a $l_1$-reconstruction loss and an adversarial loss.

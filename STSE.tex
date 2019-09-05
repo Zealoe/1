@@ -132,8 +132,14 @@ Experiments on the YouTubeVOS and DAVIS datasets show that our method obtains st
 
 
 \section{Conclusion}
-In this paper, we propose a novel structure-oriented video inpainting method, which utilizes sturcture information to generate fine-detailed frames. We first complete edge maps, which indicate structure details in frames. Then we generate frames under the guidance of structure information. Besides, we synthesize missing optical flow to constrain the temporal consistency of final outputs.
-Experiments on YouTubeVOS and DAVIS datasets demonstrate the effectiveness of our method of utilizing structure preserving in video inpainting.
+In this paper, we propose a novel structure-guided video inpainting approach, which effectively utilizes structure information to generate fine-detailed frames.
+Using the edge inpainting network, the edges in the missing region are first estimated to explicitly represent the target structure. 
+Then under the guidance of the sparse edges, the missing content can be synthesized with intact structure and fine details.
+%
+Our proposed structure attention module effectively exploit the correlation between structure and textures to improve the visual quality.
+%
+Besides, the temporal coherence of the inpainting frames is further enhanced by our flow-assisted modules.
+Experiments on YouTubeVOS and DAVIS datasets demonstrate the effectiveness of our method.
 
  
 
