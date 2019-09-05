@@ -32,8 +32,10 @@
 % For /Author, add all authors within the parentheses, separated by commas. No accents or commands.
 % For /Title, add Title in Mixed Case. No accents or commands. Retain the parentheses.
  \pdfinfo{
-/Title (Spatio-Temporal Structure Enhancement for Video Inpainting)
-/Author (Anomymous sumbission)
+%/Title (Spatio-Temporal Structure Enhancement for Video Inpainting)
+%/Title (Structure-Guided Deep Video Inpainting)
+/Title (Structure-Guided Deep Video Inpainting)
+/Author (Submission ID: 5411)
 } %Leave this	
 % /Title ()
 % Put your actual complete title (no codes, scripts, shortcuts, or LaTeX commands) within the parentheses in mixed case
@@ -93,21 +95,32 @@
 %
 \setlength\titlebox{2.5in} % If your paper contains an overfull \vbox too high warning at the beginning of the document, use this
 % command to correct it. You may not alter the value below 2.5 in
-\title{Spatio-Temporal Structure Enhancement for video inpainting}
+%\title{Structure-Guided Video Inpainting by Learning Spatio-Temporal Edges}
+\title{Structure-Guided Deep Video Inpainting}
 %Your title must be in mixed case, not sentence case. 
 % That means all verbs (including short verbs like be, is, using,and go), 
 % nouns, adverbs, adjectives should be capitalized, including both words in hyphenated terms, while
 % articles, conjunctions, and prepositions are lower case unless they
 % directly follow a colon or long dash
-\author{Anonymous submission}
+\author{Submission ID: 5411}
+
+
+
+ 
  \begin{document}
 
 \maketitle
 
 \begin{abstract}
-The fundamental challenge that lies in video inpainting is the difficulty of generating spatio-temporally coherent video contents with fine details in the missing regions. Most existing methods fill the pixel colors in the missing regions and suffer from structure cracks and image blurs. In this paper, we present a novel structure-oriented video inpainting approach to tackle this problem. To produce complete and detailed structure in the missing region, we first synthesize edge maps that well represent scene structure and object shapes by an edge inpainting network. Then we replenish the colors and textures using a coarse-to-fine generation network under the guidance of the extracted structure. This is achieved by a newly designed structure attention module that explores the correlation between video contents and structural edges. 
-%
-Besides, we develop a flow inpainting network to estimate the flow filed in the missing regions, which can improve the temporal consistence by flow-guided warping and temporal ensemble. Consequently, the inpainted results using our approach are visually pleasing with spatio-temporal coherence as well as low computational cost. Experiments on the YouTubeVOS and DAVIS datasets show that our method obtains state-of-the-art performance and demonstrate the significance of structure preserving in video inpainting.
+The fundamental challenge in video inpainting is the difficulty of generating video contents with fine details while keeping spatiotemporal coherence in the missing region. 
+Most existing methods suffer from cracks and blurs mainly because they directly fill pixel colors without considering structural coherence, which has a significant impact on visual quality. 
+In this paper, we present a novel structure-guided video inpainting approach to tackle this problem. 
+To produce visually plausible content in the missing region, we first synthesize edge maps that well represent scene structure and object shapes by an edge inpainting network using 3D convolutions in multiple neighboring frames. 
+Then we replenish pixel colors and textures using a coarse-to-fine synthesis network under the guidance of the integrated structure. 
+We design a structure attention module to fully exploit the correlation between video contents and structural edges. 
+Furthermore, to enhance the temporal consistency of the inpainting results, we develop a flow-assisted scheme to enforce temporal consistency between the synthesized adjacent edge maps during training and smoothen flickers in the inpainting results via a temporal ensemble module. 
+Consequently, the inpainting results using our approach are visually pleasing with fine details and temporal coherence in low computational cost. 
+Experiments on the YouTubeVOS and DAVIS datasets show that our method obtains state-of-the-art performance in different video inpainting settings.
 
 \end{abstract}
 
