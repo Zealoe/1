@@ -39,16 +39,16 @@ Finally, the inpainted edge maps are obtained by:
 The ENet is trained by playing a minimax game to optimize the generator $G^E$ and the discriminator $D^E$ as
 \begin{equation}
 \label{eq:loss_e}
-\mathcal{O}_{edge} =\min\limits_{G^E} \max \limits_{D^E} \big(\mathcal{L}^E_{adv}+\lambda_1 * \mathcal{L}^E_{fm}+\mathcal{L}_{fec}\big),
+\mathcal{O}_{edge} =\min\limits_{G^E} \max \limits_{D^E} \big(\mathcal{L}^E_{adv}+\lambda_1 * \mathcal{L}^E_{fm}\big),
 \end{equation}
-where $\mathcal{L}^E_{adv}$, $\mathcal{L}^E_{fm}$, and $\mathcal{L}_{fec}$ are respectively the adversarial loss, feature matching loss, and flow-edge consistency loss. $\mathcal{L}_{fec}$ targets to temporally smooth edge maps, which will be introduced in the following section.
+where $\mathcal{L}^E_{adv}$ and $\mathcal{L}^E_{fm}$ are the adversarial loss and feature matching loss. 
 $\lambda_1$ is a hyper-parameter to balance the three terms.
 %
-Following the adversarial learning manner, $\mathcal{L}^E_{adv}$ can facilitate ENet to produce plausible edge maps and is defined as
+Following the adversarial learning manner, $\mathcal{L}^E_{adv}$ can facilitate ENet to produce plausible edge maps by:
 \begin{equation} \label{eq:edge_adver}
 \begin{aligned} 
-\mathcal{L}^E_{adv} & =&\mathbb{E}_{(\boldsymbol{E}^{gt},\boldsymbol{X}^{g})}\big[logD^E(\boldsymbol{E}^{gt},\boldsymbol{X}^{g})\big]\\ 
-&&+\mathbb{E}_{\boldsymbol{X}^{g}}\big[log\big(1-D^E ( \boldsymbol{E},\boldsymbol{X}^{g})\big)\big],
+\mathcal{L}^E_{adv}  =&\mathbb{E}_{(\boldsymbol{E}^{gt},\boldsymbol{X}^{g})}\big[logD^E(\boldsymbol{E}^{gt},\boldsymbol{X}^{g})\big]\\ 
++&\mathbb{E}_{(\boldsymbol{E},\boldsymbol{X}^{g})}\big[log\big(1-D^E ( \boldsymbol{E},\boldsymbol{X}^{g})\big)\big],
 \end{aligned}
 \end{equation}
 where $\boldsymbol{E}^{gt}$ represents the ground truth edge maps. $\mathcal{L}^E_{fm}$ evaluates the feature-level similarity between ground truth edge maps and predicted edge maps, which helps to create structurally rational edge maps. 
@@ -84,7 +84,7 @@ The proposed TexNet consists of a coarse network and a refinement network, as Fi
 The input of TexNet is the concatenation of $\boldsymbol{X}$, $\boldsymbol{E}$, and $\boldsymbol{M}$.
 First, the coarse inpainting network consists of a set of 3D convolutions to capture the temporal information, which targets to produce an rough completion for the $T$ frames  $\boldsymbol{Y}^i$ with colors.
 %The 3D coarse network incorporates neighboring frames by convolutions of the time dimension.
-Second, the refinement network takes the synthesized edge maps $\boldsymbol{E}$ and $\boldsymbol{Y}^i$ as input and uses 2D convolutions to enhance structure details and synthesize frame $Y^I_t$. 
+Second, the refinement network takes the synthesized edge maps $\boldsymbol{E}$, $\boldsymbol{Y}^i$ and $\boldsymbol{M}$ as input and uses 2D convolutions to enhance structure details and synthesize frame $Y^T_t$. 
 %For the corrupted region, our ENet first completes sparse edges which well represent the structure of the missing content, then TexNet progressively replenishes textures under the guidance of synthesized edges.
 
 
@@ -103,15 +103,15 @@ After introducing structural guidance, the inpainted content by TexNet becomes m
  
 
 
-To train the TexNet, we define a reconstruction loss as:
+To train the TexNet, we define the loss function as:
 %
 \begin{equation}
 	\label{eq:1}
-		\mathcal{O}_{tex}=\min\limits_{G^T} \max \limits_{D^T} \big(\mathcal{L}^{T}_{rec}+\mathcal{L}^T_{adv}+\mathcal{L}^{T}_{flo}\big).
+		\mathcal{O}_{tex}=\min\limits_{G^T} \max \limits_{D^T} \big(\mathcal{L}^{T}_{rec}+\mathcal{L}^T_{adv}\big).
 \end{equation}
 %
-The first term $\mathcal{L}^{T}_{rec}$ is the $l_1$-reconstruction loss to measure the difference between predicted video frame and the ground truth video frame $\widetilde{Y}_t$.
-Different from \cite{nazeri2019edgeconnect}, we penalize both the coarse predictions $\boldsymbol{Y}^i$ and refined frame $Y^{T}_t$ comparing with the ground truth $\widetilde{Y}_t$, given by:
+Inspired by \cite{nazeri2019edgeconnect}, the first term $\mathcal{L}^{T}_{rec}$ is the $l_1$-reconstruction loss to measure the difference between predicted video frames and the ground truth video frames $\widetilde{\boldsymbol{Y}}$.
+Different from \cite{nazeri2019edgeconnect}, we penalize both the coarse predictions $\boldsymbol{Y}^i$ and refined frame $Y^{T}_t$, given by:
 \begin{equation}
 	\begin{aligned}
 		\mathcal{L}^{T}_{rec}&=\frac{1}{\left\|\boldsymbol{M} \right\|_1}\left\|(\boldsymbol{Y}^i-\widetilde{\boldsymbol{Y}})\odot \boldsymbol{M}\right\|_1\\ &+\lambda_2*\frac{1}{\left\|M_t \right\|_1}\left\|(Y^T_t-\widetilde{Y}_t)\odot M_t\right\|_1.
@@ -119,7 +119,7 @@ Different from \cite{nazeri2019edgeconnect}, we penalize both the coarse predict
 \end{equation}
 %
 %
-Besides, an extra adversarial loss $\mathcal{L}^I_{adv}$ is introduced to promote the visual realism of the generated frame.
+Besides, an extra adversarial loss $\mathcal{L}^T_{adv}$ is introduced to promote the visual realism of the generated frame.
 \dlt{ by:
 %$\mathcal{L}^I_{adv}$ is defined as:
 \begin{equation}
@@ -128,7 +128,7 @@ Besides, an extra adversarial loss $\mathcal{L}^I_{adv}$ is introduced to promot
 \end{equation}
 where $G^I$ is the TexNet and $D^I$ has the similar architecture with $D^E$.}
 % $\mathcal{L}^I_{adv}$ enforces the generated frame to be more realistic.
-$\mathcal{L}^I_{flo}$ is a flow warping loss, which will be introduced subsequently.
+
 
 
 
@@ -227,7 +227,7 @@ From the predicted optical flows $\boldsymbol{O}^i$, FNet estimates the flows in
 	\label{eq:flownet}
 	\boldsymbol{O}=G^F(\boldsymbol{O}^{i},\boldsymbol{M}),
 \end{equation}
-where the generator $G^F$ consists of an encoder that uses ResNet101 \cite{He_2016_CVPR} as backbone and a decoder.
+where $G^F$ denotes FNet, which consists of an encoder that uses ResNet101 \cite{He_2016_CVPR} as backbone and a decoder.
 %The detailed architecture of FNet is shown in Fig.~\ref{fig:stiNet}.
 
 To train the flow inpainting network, the loss function is given by:
@@ -251,7 +251,7 @@ To achieve this goal, a flow-edge consistency loss is defined as:
 	\mathcal{L}_{fec}=\sum_{k}\frac{1}{\left\|M_{t} \right\|_1}\left\|(E_{t}-\phi(O_{t\Rightarrow t-k},E_{t-k}))\odot M_{t}\right\|_1,
 \end{equation}
 where $\phi(O_{t\Rightarrow t-k},E_{t-k})$ is the warping operation which warps the edge map $E_{t-k}$ to the target frame according to the generated optical flow $O_{t\Rightarrow t-k}$.
-$k$ denotes the index of neighboring frames ($k\in \left\{-7,-3,+3,+7 \right\}$). 
+$k$ denotes the index of neighboring frames ($k\in \left\{-7,-3,+3,+7 \right\}$). Also, $\mathcal{L}_{fec}$ is added to Eq.~\eqref{eq:loss_e} for joint training of ENet and FNet.
 %Specifically, $\mathcal{L}_{fec}$ warps the edge maps from neighboring frames to the target frame to penalize the reconstruction loss.
 %In terms of ENet, $\mathcal{L}_{fec}$ encourages the predicted edge maps to be temporally smoothing, which should conform to the motion tendency in the flow maps $\boldsymbol{O}$. 
 %In terms of FNet, $\mathcal{L}_{fec}$ constrains the model to focus on edges.
@@ -262,20 +262,21 @@ $k$ denotes the index of neighboring frames ($k\in \left\{-7,-3,+3,+7 \right\}$)
 %\end{equation}
 
 
-To eliminate temporal flickers in the completed video frames, we enforce the temporal coherence of synthesized neighboring frames via a flow warping constraint $\mathcal{L}^I_{flo}$ in Eq.~\eqref{eq:1}. 
+To eliminate temporal flickers in the completed video frames, we enforce the temporal coherence of synthesized neighboring frames via a flow warping constraint $\mathcal{L}^T_{flo}$. 
 %
 Specifically, the neighboring frames are warped into the target frame to compute the difference: 
 \begin{equation}
 \label{eq:inp_flow}
-\mathcal{L}^I_{flo}=\sum_{\widehat{t}\in\mathcal{T}}\left\| Y^I_t-\phi(O_{t\Rightarrow \widehat{t}},Y_{\widehat{t}}) \right\|_1,
+\mathcal{L}^T_{flo}=\sum_{\widehat{t}\in\mathcal{T}}\left\| Y^T_t-\phi(O_{t\Rightarrow \widehat{t}},Y_{\widehat{t}}) \right\|_1,
 \end{equation}
-where $\mathcal{T}=\{t-7,t-3\}$. $\phi(O_{t\Rightarrow \widehat{t}},Y_{\widehat{t}})$ warps $Y_{\widehat{t}}$ to $Y^I_{t}$ using flow $O_{t\Rightarrow \widehat{t}}$.
+where $\mathcal{T}=\{t-7,t-3\}$. $\phi(O_{t\Rightarrow \widehat{t}},Y_{\widehat{t}})$ warps $Y_{\widehat{t}}$ to $Y^T_{t}$ using flow $O_{t\Rightarrow \widehat{t}}$.
 %$O_{t\Rightarrow \widehat{t}}$ is predicted using the subsequent flow inpainting network.
 %$\mathcal{L}^I_{flo}$ expects that all the neighboring frames can be well warped to the target frame with small reconstruction loss.
 %
+$\mathcal{L}^T_{flo}$ is added to Eq.~\eqref{eq:1}.
 Finally, a temporal ensemble module is designed 
 to refine the current frame $Y_t$ by aggregating previous frames. %The architecture is shown in Fig.~\ref{fig:stiNet}. 
-This module is trained with a $l_1$ reconstruction loss and an adversarial loss.
+This module is trained with a $l_1$-reconstruction loss and an adversarial loss.
 
 
 

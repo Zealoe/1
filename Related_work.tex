@@ -35,6 +35,14 @@ To solve this problem, they propose to predict object contours or edges as auxil
 On the other hand, human eyes are sensitive to the temporal discontinuity, which frequently occurs at edges. 
 This brings the difficulty of simultaneously completing structure in fine details and preserving temporal coherence in video inpainting.
  
+\begin{figure*}[ht]
+	\centering
+	\includegraphics[width=2.0\columnwidth]{sti} % Reduce the figure size so that it is slightly narrower than the column. Don't use precise values for figure width.This setup will avoid overfull boxes. 
+	\caption{The detailed architecture of our network. ENet adopts an encoder-decoder architecture to complete edges in the missing regions. TexNet utilizes a coarse-to-fine manner to inpaint the final frames. FNet predicts flows between adjacent frames for flow warping loss and temporal ensemble. }
+	%FNet is based on the backbone Resnet-101, which is associated with ENet.
+	
+	\label{fig:stiNet}
+\end{figure*}
 
 In this paper, we present a novel structure-guided video inpainting approach that effectively exploits the spatio-temporal structure information to improve video inpainting quality.  
 We explore the correlation among structure, motion, and texture in video inpainting to complete the missing region with valid structure, rich visual details, and temporal coherence simultaneously.
@@ -67,14 +75,7 @@ Our technical contributions can be summarized as follows:
 \end{itemize}
 
 
-\begin{figure*}[ht]
-	\centering
-	\includegraphics[width=2.0\columnwidth]{sti} % Reduce the figure size so that it is slightly narrower than the column. Don't use precise values for figure width.This setup will avoid overfull boxes. 
-	\caption{The detailed architecture of our network. ENet adopts an encoder-decoder architecture to complete edges in the missing regions. TexNet utilizes a coarse-to-fine manner to inpaint the final frames. FNet predicts flows between adjacent frames for flow warping loss and temporal ensemble. }
-		%FNet is based on the backbone Resnet-101, which is associated with ENet.
-	 
-	\label{fig:stiNet}
-\end{figure*}
+
 
 
 \section{Related Work}
