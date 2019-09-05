@@ -7,18 +7,6 @@ In order to evaluate the effects of different components in SOVI and compare it 
 %We test on two datasets, YouTubeVOS \cite{xu2018youtube} and DAVIS \cite{davis_2017}, to compare the proposed STSENet with state-of-the-art methods. %Several ablation studies are conducted to prove the effectiveness of spatial details and temporal information in video inpainting.
 %\subsection{Experimental Settings}
 
-\noindent\textbf{Dataset.} 
-YouTubeVOS and DAVIS are widely used for evaluating video inpainting results in recent studies.
-YouTubeVOS consists of 4,453 video clips that contains more than 70 categories of common objects. 
-The videos are split into three parts, 3,471 for training, 474 for validating, and 508 for testing.
-% 
-DAVIS dataset contains 90 video sequences that are annotated with foreground object masks and 60 unlabeled videos for training. 
-
-
-\dlt{
-is for video object segmentation containing 150 video clips, among which 60 randomly sampled clips are for testing of object removal. And the rest part is used for training.
-The videos are complex with occlusions, fast motion, and various objects. }
-
 \noindent \textbf{Mask Setting.} Considering different real-world applications, we test four kinds of mask settings in this paper. 
 They are different in shapes and positions of the missing regions. 
 %The first and the second settings aims to recover rectangular regions, which are common in watermark removal.
@@ -27,69 +15,54 @@ They are different in shapes and positions of the missing regions.
 (3) \emph{Free-from mask.} We apply irregular mask which imitates hand-drawn masks on each frame, following \cite{liu2018partialinpainting}. 
 (4) \emph{Foreground object mask}. This type of mask is defined to line out foreground objects in videos and used for testing object removal.
 
- 
+\noindent\textbf{Dataset.} 
+YouTubeVOS and DAVIS are widely used for evaluating video inpainting results in recent studies.
+YouTubeVOS consists of 4,453 video clips that contains more than 70 categories of common objects. 
+The videos are split into three parts, 3,471 for training, 474 for validating, and 508 for testing. Since YoutubeVOS has no dense foreground mask annotations, we only use it for evaluation of mask settings (1), (2), and (3). 
+% 
+DAVIS dataset contains 90 video sequences that are annotated with foreground object masks and 60 unlabeled videos for training.
 
-\noindent \textbf{Implementation Details.} 
-In the data preparation stage, we randomly sample a clip every 40 frames from each video in the datasets.
-The video frames are resized into $256\times256$.
+
+\dlt{
+is for video object segmentation containing 150 video clips, among which 60 randomly sampled clips are for testing of object removal. And the rest part is used for training.
+The videos are complex with occlusions, fast motion, and various objects. }
+
+\noindent \textbf{Implementation details and Evaluation Metrics.} 
+For all the mask settings, the video frames are resized into $256\times256$. The detailed training strategies are explained in the supplementary file. 
+Different data preparations and evaluation metrics are applied according to mask settings.
+
+\noindent (a) We randomly generate masks for training videos in terms of mask settings (1), (2), and (3).  
+ Three commonly-used metrics, including structural similarity index (SSIM) \cite{wang2004image}, peak signal-to-noise ratio (PSNR), and Fr{\'e}chet Inception Distance (FID) \cite{heusel2017gans} are used to quantitatively evaluate the performance of our method. 
+
+\noindent (b) For mask setting (4), we prepare masks of random shapes and motions to synthesize the foreground object masks in the training stage. The network is first trained on YoutubeVOS and then finetuned on DAVIS. Since there is no ground truth available for this setting, we conduct a user study for video foreground object removal.  
+
+%\noindent \textbf{Implementation Details.} 
 %
-\cxj{Describe the training strategy of different dateset and mask settings.}
-Our training process consists of three steps.
-First, we train ENet and FNet jointly with the objective function $\mathcal{O}_{edge}+\mathcal{O}_{flow}$ which are defined in Eq.~\eqref{eq:loss_e} and Eq.~\eqref{eq:flow_all}, respectively.
-Then we train TexNet with $\mathcal{O}_{tex}$ in Eq.~\eqref{eq:1} while fixing ENet and FNet.
-The ensemble module is finally trained while fixing all the other modules.
+%
+%
+%
+%%
+%\cxj{Describe the training strategy of different dateset and mask settings.}
 
 
 
-  \begin{table}[t]
-  	\caption{Comparisons with existing methods on DAVIS. To save space, the year of method is not listed.}\smallskip
-  	
-  	\centering
-  	\resizebox{0.6\columnwidth}{!}{
-  		\smallskip\begin{tabular}{c|c|c|c }
-  			\hline
-  			& \multicolumn{3}{c}{Moving Square Mask} \\
-  			\cline{2-4} 
-  			&PSNR & SSIM & FID \\
-  			\hline
-  			Nazeri et al.  \\
-  			\hline
-  			Wang et al. & \\
-  			\hline
-  			
-  			
-  			Kim et al. b&  \\
-  			\hline
-  			Xu et al. & \\
-  			\hline
-  			
-  			
-  			
-  			
-  			
-  			Ours &\\
-  			
-  			\hline
-  			
-  			
-  		\end{tabular}
-  	}
-  	\label{tab:davis_zong}
-  \end{table}
+
+
+
   
 \dlt{Adam optimizer  with $\beta=(0.9, 0.999)$.
 The learning rate is set to $1e-4$ for $N^E$ and $G^F$ and $1e-5$ for $D^E$. 
 Then, the TexNet is trained with learning rate of $1e-4$ for $G^I$, and $4e-4$ for $D^I$. Finally, we fix the former parts and train the temporal ensemble module with the learning rate of $1e-4$. We do not use weight decay in training.
 As for the hyper-parameters, $\lambda_1=10.0,\lambda_2=5.0, \lambda_3=0.1$.}
 
-\noindent \textbf{Evaluation Metrics.} 
-\cxj{For what task?}
-We use three commonly-used metrics, including structural similarity index (SSIM) \cite{wang2004image}, peak signal-to-noise ratio (PSNR), and Fr{\'e}chet Inception Distance (FID) \cite{heusel2017gans}, to quantitatively evaluate the performance of our method. 
+%\noindent \textbf{Evaluation Metrics.} 
+%\cxj{For what task?}
 %
-Besides, the quantitative metrics can not be used in the experiments of foreground object removal, since there is no ground truth available. 
-So we conduct a user study for video foreground object removal. 
- 
-\cxj{Follow the way of introducing experiment settings in DeepFlow-CVPR19.}
+%%
+%Besides, the quantitative metrics can not be used in the experiments of foreground object removal,
+%So we 
+% 
+%\cxj{Follow the way of introducing experiment settings in DeepFlow-CVPR19.}
 
 
 
@@ -103,18 +76,20 @@ So we conduct a user study for video foreground object removal.
 
 \subsection{Main Results on Video Inpainting}
 
-We compare our results with state-of-the-art inpainting methods~\cite{nazeri2019edgeconnect,wang2019video,Kim_2019_CVPR1,Xu_2019_CVPR} for the first three mask settings on the YouTubeVOS dataset. 
+We compare our results with state-of-the-art inpainting methods~\cite{nazeri2019edgeconnect,wang2019video,Kim_2019_CVPR1,Xu_2019_CVPR} for the first three mask settings on YouTubeVOS dataset. The masked videos are used as testing data.
 %
-The quantitative results and running times are reported in Table~\ref{tab:sem}.
+We train \cite{nazeri2019edgeconnect,Xu_2019_CVPR} using their official codes and reimplement \cite{wang2019video} according to their paper. As for \cite{Kim_2019_CVPR1}, we use the provided official model since there is no available training codes.
+
+The quantitative results and inference speed are reported in Table~\ref{tab:sem}.
 It shows that our method outperforms state-of-the-art methods on the three metrics, demonstrating the effectiveness of introducing structural guidance into video inpainting.
-Moreover, our method is also very efficient on time performance. 
-Our method is twice faster than \cite{Kim_2019_CVPR1} and 4 times faster than \cite{Xu_2019_CVPR}. 
+Moreover, our method is also very efficient. For examples,
+SOVI is twice faster than \cite{Kim_2019_CVPR1} and 4 times faster than \cite{Xu_2019_CVPR}. 
 %
 We also show some inpainting examples in Fig.~\ref{viszong}.
 Compared with existing methods, the inpainting results predicted by our method are more realistic with finer details. 
 We can observe that the frames predicted by our method contains more sharper object contours. This is achieved by the effectiveness of structure information in video inpainting.
 %
-When looking at two neighboring frames in each video, it can be seen that our method produces more temporally smooth results. More comparisons of the completed videos can be found in the supplementary material.
+When looking at two neighboring frames in each video, it can be seen that our method produces more temporally smooth results. More comparisons of the completed videos can be found in the supplementary video.
 
 
 
@@ -137,78 +112,90 @@ When the flow inpainting module is removed in SOVI, the inference speed is almos
 %
 
 
+
+
+
 \subsection{Results on Object Removal}
 
 
-In regard to the fourth setting that aims to complete regions in arbitrary shapes, there is no ground truth for quantitatively evaluation. Therefore,
+In regard to the fourth setting that aims to remove undesired objects in videos, there is no ground truth for quantitatively evaluation. Therefore,
 we conduct a user study on the DAVIS dataset to evaluate the visual quality of our method, comparing with four state-of-the-art methods \cite{nazeri2019edgeconnect,wang2019video,Kim_2019_CVPR1,Xu_2019_CVPR}.
 %
-In each test, we show three videos to the subject at the same time. The original video with red masks indicating objects to remove is shown in the video, while the completed result of our method and the result of another method are shown on the two sides in a random order.
+In each test, we show three videos to the subject at the same time. The original video with red masks indicating objects to remove is shown in the video, while the completed results of our method and another method are shown on the two sides in a random order.
 %  
-The subjects are allowed to watch the videos multiple times to better evaluate the differences.
-For each video triplet, the subject is asked to choose which completed video is prefered.
+The subjects can watch the videos multiple times to better evaluate the differences.
+For each video triplet, the subject is asked to choose which completed video is preferred.
 %
-In total 30 subjects participated our user study. 
-Each participant watched 20 triplets carefully, and choose which inpainted video is visually better. 
+\begin{figure}[!t]
+	\centering
+	\includegraphics[width=1.0\columnwidth]{userstudy} % Reduce the figure size so that it is slightly narrower than the column. Don't use precise values for figure width.This setup will avoid overfull boxes. 
+	\caption{Results of user study.}
+	\label{userstudy}
+\end{figure}
+In total 40 subjects participated our user study. 
+Each participant watched 20 triplets carefully, and chose which inpainted video is visually better. 
 %
-Each method is compared for about 150 times.
+Each method is compared about 200 times.
 %
-The preference in the user study is shown in Fig.~\ref{fig:user-study}. \cxj{change table to figure.}
+\begin{figure}[!h]
+	\centering
+	\includegraphics[width=1.0\columnwidth]{vis_forg} % Reduce the figure size so that it is slightly narrower than the column. Don't use precise values for figure width.This setup will avoid overfull boxes. 
+	\caption{Visualized object foreground removal. The red mask in input frames indicates the object that we want to remove.}
+	\label{vis_forg}
+\end{figure}
+The preference in the user study is shown in Fig.~\ref{userstudy}. 
+Comparing to \cite{nazeri2019edgeconnect,wang2019video,Kim_2019_CVPR1}, our results are preferred by a significantly larger portion of subjects.
 %
-Comparing to \cite{nazeri2019edgeconnect,wang2019video,Kim_2019_CVPR1}, our results are preferred by a significant larger portion of subjects.
-%
-When comparing with the flow-guided method~\cite{Xu_2019_CVPR}, our method is preferred in $59.41\%$ of the tests. 
+When comparing with the flow-guided method~\cite{Xu_2019_CVPR}, our method is preferred in $55.61\%$ of the tests. 
 Notably, our method is much faster than ~\cite{Xu_2019_CVPR}.
-
 \dlt{
 We list the preferred proportion of each methods compared to ours. The results are reported in Table~\ref{tab:userstudy}, which shows that our method is preferred by the users. }
 
-
 %
-Fig.~\ref{vis_forg} demonstrates that two examples of object removal using different methods. 
+Fig.~\ref{vis_forg} shows two examples of object removal using different methods. 
 %We can see that generated by our methods are visually better than existing methods.
 Compared to the blurry contents in the results of \cite{nazeri2019edgeconnect,wang2019video,Kim_2019_CVPR1}, our method produces sharp object boundaries and fine visual details. 
-Though the completed contents using \cite{Xu_2019_CVPR} have shape edges, the global structure is corrupted on the human bodies. In comparison, our method achieves more complete and plausible structure with fine details.
+Though the completed contents using \cite{Xu_2019_CVPR} have shape edges, the global structure is corrupted on the human bodies. In comparison, our method achieves more completed and plausible structure with fine details.
 
 
 
-\begin{table}[t]
-	\caption{The result of user study. \cxj{Change table to figure.}}\smallskip
-	\tiny
-	\centering
-	\resizebox{0.7\columnwidth}{!}{
-		\smallskip\begin{tabular}{c|c}
-			\hline
-			Comparing Methods&Preferred Proportion\\
-			\hline
-			Ours/Nazeri et al.&0.9083/0.0917\\
-			\hline
-			Ours/Wang et al. &0.8015/0.1985\\
-			\hline
-			Ours/Kim et al. b &0.7357/0.2643\\
-			\hline
-			Ours/Xu et al. &0.5941/0.4059\\
-			\hline
-			
-			
-		\end{tabular}
-	}
-	\label{tab:userstudy}
-\end{table}
+%\begin{table}[t]
+%	\caption{The result of user study. \cxj{Change table to figure.}}\smallskip
+%	\tiny
+%	\centering
+%	\resizebox{0.7\columnwidth}{!}{
+%		\smallskip\begin{tabular}{c|c}
+%			\hline
+%			Comparing Methods&Preferred Proportion\\
+%			\hline
+%			Ours/Nazeri et al.&0.9083/0.0917\\
+%			\hline
+%			Ours/Wang et al. &0.8015/0.1985\\
+%			\hline
+%			Ours/Kim et al. b &0.7357/0.2643\\
+%			\hline
+%			Ours/Xu et al. &0.5941/0.4059\\
+%			\hline
+%			
+%			
+%		\end{tabular}
+%	}
+%	\label{tab:userstudy}
+%\end{table}
 
 
 
 
 \subsection{Ablation Study}
-To demonstrate the effectiveness of each proposed component in our approach, we conduct a series of ablation studies on the YouTubeVOS dataset with the first three mask settings. 
+To demonstrate the effectiveness of each component in our approach, we conduct a series of ablation studies on the YouTubeVOS dataset with the first three mask settings. 
 %
 We test four variants of our model. 
-The baseline model STINet only consists of the coarse-to-fine texture inpainting network without using the edge maps as input and no SAM in the refinement module.
+The baseline model `TexNet' only consists of the coarse-to-fine texture inpainting network without using the edge maps as input and no SAM in the refinement module.
 This model simply integrates neighboring frames to predict the missing content for the current frame.
 %
 Then we add the edge inpainting network and fed the texture inpainting network with the completed edge maps to get the second model `+ENet'.
 The third model `+SAM' is constructed by adding the structure attention module on the second model. 
-Finally, we add the flow guidance including FNet and the ensemble module to get our full model `+Flow'.
+Finally, we add the flow guidance including FNet and the ensemble module to get our full model `Ours'.
 The quantitative results are reported in Table~\ref{tab:sem}. 
 
 
@@ -233,11 +220,11 @@ Three variants are used: 'Baseline', '+ENet', and '+SAM'.
 Comparing the four variants, `+ENet' brings large improvement over the baseline model.
 It indicates that sparse edges provide effective structural guidance in video inpainting.
 % which helps the network to predict accurate missing content.
-When we further add SAM to STI, extra improvement is obtained. 
+When we further add SAM to `+ENet', extra improvement is obtained. 
 It demonstrates that the spatial correlation between  edges and textures can be better embedded and absorbed by the texture inpainting network than simply feeding the completed edge maps as extra channels into TexNet.
 %The above analyses prove that the edge clues are effective guidance in video inpainting, which helps the network to predict more accurate frames.
 
-
+Fig.~\ref{fig:coarse-fine} shows an example of inpainted edge, which demonstrates that ENet is capable of generating detailed structure.
 Fig.~\ref{edgevis} shows the results generated using the three variants. 
 It's obvious that after introducing the edge structure, the inpainted frames become visually better with sharper object contours. 
 Besides, the edge maps predicted by our method are reasonable and clear, which well represents the structure information and show the strong edge inpainting ability of ENet. Thus, it is crucial to explore structural details when inpainting the videos.
@@ -253,7 +240,7 @@ Besides, the edge maps predicted by our method are reasonable and clear, which w
 %\end{figure}
 \begin{figure}[t]
 	\centering
-	\includegraphics[width=1.0\columnwidth]{flow_vis} % Reduce the figure size so that it is slightly narrower than the column. Don't use precise values for figure width.This setup will avoid overfull boxes. 
+	\includegraphics[width=0.9\columnwidth]{flow_vis} % Reduce the figure size so that it is slightly narrower than the column. Don't use precise values for figure width.This setup will avoid overfull boxes. 
 	\caption{Visualized effects of temporal information.}
 	\label{flow_vis}
 \end{figure}
@@ -265,6 +252,7 @@ In our method, we utilize temporal information from the inpainted flows to smoot
 From Table~\ref{tab:sem}, we can see that the quantitative performance is slightly improved on all the three settings by adding the flow guidance. 
 As shown in Fig.~\ref{flow_vis}, the synthesized contents in neighboring frames are more consistent in time.
 %and the color changes between neighboring frames become less obvious after employing flow.
+The comparison can be better illustrated in the supplementary videos.
 Furthermore, it should be noted that the performance improvement from temporal information is smaller than that from structure information in this paper.
 The reason maybe that our base model has certain ability to utilize complementary information of neighboring frames.
 %Both the quantitative and qualitative results prove that the motion information is beneficial to temporal consistency as well as inpaitning.
@@ -303,12 +291,6 @@ It can be seen that the result is further improved after utilizing temporal info
 %\noindent \textbf{Baselines.} Several variants of STSENet are defined as following. (1) STI w/o flow: The Spatio-Temporal Inpainting network without flow guidance \cxj{with or without EdgeNet and SEM?}. (2) STI w/o edge: The Spatio-Temporal Inpainting network without structure guidance. (3) STSENet w/o $\mathcal{L}_{fec}$: The Spatio-Temporal Inpainting network with guidance of both structure and motion, but $\mathcal{L}_{fec}$ is not used. (4) STSENet is the model which uses all modules proposed in this paper. 
 %
 %\cxj{We discussed four variants of our method. Use that version. }
-\begin{figure}[!h]
-	\centering
-	\includegraphics[width=1.0\columnwidth]{vis_forg} % Reduce the figure size so that it is slightly narrower than the column. Don't use precise values for figure width.This setup will avoid overfull boxes. 
-	\caption{Visualized object foreground removal. The red mask in input frames indicates the object that we want to remove.}
-	\label{vis_forg}
-\end{figure}
 
 
 
