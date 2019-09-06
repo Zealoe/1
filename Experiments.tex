@@ -28,10 +28,17 @@ is for video object segmentation containing 150 video clips, among which 60 rand
 The videos are complex with occlusions, fast motion, and various objects. }
 
 \noindent \textbf{Implementation details and Evaluation Metrics.} 
-For all the mask settings, the video frames are resized into $256\times256$. The detailed training strategies are explained in the supplementary file. 
+All the models are test on a TITAN X (Pascal) GPU with frame size $256 \times 256$.
+For training data, We randomly sample a training clip every 40 frames from each video in the dataset. Our training consists of three steps. First, we train ENet and FNet jointly. Learning rate is set as $1e-4$ for $G^E$ and $G^F$ and $1e-5$ for $D^E$. 
+Then we train TexNet while fixing ENet and FNet. Learning rate is set as $1e-4$ for $G^T$, and $4e-4$ for $D^T$.
+The ensemble module is finally trained while fixing all the other modules. Learning rate is $1e-4$.
+Adam optimizer with $\beta=(0.9, 0.999)$ is used for all sub-networks.
+%We do not use weight decay in training.
+As for the hyper-parameters, $\lambda_1=10.0,\lambda_2=5.0, \lambda_3=0.1$.
+
 Different data preparations and evaluation metrics are applied according to mask settings.
 
-\noindent (a) We randomly generate masks for training videos in terms of mask settings (1), (2), and (3).  
+\noindent (a) We randomly generate masks for training videos in terms of mask settings (1), (2), and (3). Masked videos are used for test.
 Three commonly-used metrics, including structural similarity index (SSIM) \cite{wang2004image}, peak signal-to-noise ratio (PSNR), and Fr{\'e}chet Inception Distance (FID) \cite{heusel2017gans} are used to quantitatively evaluate the performance of our method. 
 
 \noindent (b) For mask setting (4), we prepare masks of random shapes and motions to synthesize the foreground object masks in the training stage. The network is first trained on the YoutubeVOS dataset and then finetuned on DAVIS. Since there is no ground truth available for this setting, we conduct a user study for video foreground object removal.  
@@ -55,7 +62,7 @@ As for the hyper-parameters, $\lambda_1=10.0,\lambda_2=5.0, \lambda_3=0.1$.}
 
 \subsection{Main Results on Video Inpainting}
 
-We compare with four state-of-the-art inpainting methods for the first three mask settings on the YouTubeVOS dataset. %The masked videos are used as testing data.
+We compare with four state-of-the-art inpainting methods for the first three mask settings on the YouTubeVOS dataset.
 %
 We train \cite{nazeri2019edgeconnect,Xu_2019_CVPR} using their codes and re-implement \cite{wang2019video} according to their paper. As for \cite{Kim_2019_CVPR1}, we use the officially provided model since there is no available training codes.
 
@@ -84,7 +91,7 @@ This also indicates that structure clues can bring strong promotion to video inp
 \dlt{
 Specifically, the additional time cost brought by edge enhancement is negligible.
 %
-When the flow inpainting module is removed in SOVI, the inference speed is almost twice faster, and our performance is still competitive.
+When the flow inpainting module is removed, the inference speed is almost twice faster, and our performance is still competitive.
 }
 %
 
@@ -108,20 +115,7 @@ Therefore, each pair of methods is compared about 200 times.
 %Each method is compared about 200 times.
 
 %
-\begin{figure}[!t]
-	\centering
-	\includegraphics[width=1.0\columnwidth]{userstudy} % Reduce the figure size so that it is slightly narrower than the column. Don't use precise values for figure width.This setup will avoid overfull boxes. 
-	\caption{Results of user study.}
-	\label{userstudy}
-\end{figure}
 
-%
-\begin{figure}[!h]
-	\centering
-	\includegraphics[width=1.0\columnwidth]{vis_forg} % Reduce the figure size so that it is slightly narrower than the column. Don't use precise values for figure width.This setup will avoid overfull boxes. 
-	\caption{Results of object foreground removal. The red masks in input frames indicate the objects to be removed.}
-	\label{vis_forg}
-\end{figure}
 
 
 The preference in the user study is shown in Fig.~\ref{userstudy}. 
@@ -132,6 +126,19 @@ Notably, our method is much faster than ~\cite{Xu_2019_CVPR}.
 \dlt{
 We list the preferred proportion of each methods compared to ours. The results are reported in Table~\ref{tab:userstudy}, which shows that our method is preferred by the users. }
 %
+\begin{figure}[!t]
+	\centering
+	\includegraphics[width=1.0\columnwidth]{userstudy} % Reduce the figure size so that it is slightly narrower than the column. Don't use precise values for figure width.This setup will avoid overfull boxes. 
+	\caption{Results of user study.}
+	\label{userstudy}
+\end{figure}
+%
+\begin{figure}[!h]
+	\centering
+	\includegraphics[width=1.0\columnwidth]{vis_forg} % Reduce the figure size so that it is slightly narrower than the column. Don't use precise values for figure width.This setup will avoid overfull boxes. 
+	\caption{Results of object foreground removal. The red masks in input frames indicate the objects to be removed.}
+	\label{vis_forg}
+\end{figure}
 Fig.~\ref{vis_forg} shows two examples of object removal using different methods. 
 %We can see that generated by our methods are visually better than existing methods.
 Compared to the blurry contents in the results of \cite{nazeri2019edgeconnect,wang2019video,Kim_2019_CVPR1}, our method produces sharp object boundaries and fine visual details. 
