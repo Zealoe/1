@@ -3,9 +3,9 @@
 \section{Approach}
 \label{sec:approach}
 
-The target of our method is to recover the missing contents in a corrupted video with fine details and temporal consistence.
+The target of our method is to recover the missing contents in a corrupted video with fine details and temporal consistency.
 %
-%Our intuition is that there exists complementary information in neighboring frames, which can benefit the inpainting process of each individual frame.Therefore, 
+%Our intuition is that there exists complementary information in neighboring frames, which can benefit the inpainting process of each individual frame. Therefore, 
 In each inference batch to fill up the missing part in frame $X_t$, total $T$ frames $\boldsymbol{X}$ ($T=5$), indexed by $\msset{X}$, are fed to our inpainting network, as well as the corresponding masks $\boldsymbol{M}$ that indicate the missing regions.
 The final output is the completed frame \(Y_t\) at time $t$. 
 %Our method infers each target frame $Y_t$ individually but with hints from its neighboring source frames.
@@ -19,11 +19,11 @@ It consists of a flow inpainting network FNet that predicts the motion flows in 
 
 \subsection{Edge Inpainting Network}
 \label{sec:edgenet}
- 
+
 To fill the missing regions with fine details, their corresponding structural edges are predicted, and provide structural guidance for the following texture synthesis.
 %
 Given the input corrupted frames $\boldsymbol{X}$, a canny edge detector is first used to extract the edge maps $\boldsymbol{E}^{i}$. %Notably, the edges in the masked regions in $\boldsymbol{E}^{i}$ are missed. 
-%Given the incompleted grayscale images $\boldsymbol{X}^{g}$ of input frame, a canny edge detector is first used to generate initial edge maps . 
+%Given the incompleted grayscale images $\boldsymbol{X}^{g}$ of input frame, a canny edge detector is first used to generate initial edge maps. 
 Then, the ENet completes the missing edges.
 The input of ENet consists of the grayscale frames $\boldsymbol{X}^{g}$, initial edge maps $\boldsymbol{E}^{i}$, and their corresponding masks $\boldsymbol{M}$.
 %
@@ -32,31 +32,31 @@ $G^E$ is composed of a two-layer 3D encoder, eight 2D residual blocks, and a two
 The 3D encoder and decoder are designed to learn the spatio-temporal correlation, while the 2D residual blocks are used to enrich spatial features in larger receptive fields. The discriminator $D^E$ follows the $70\times 70$ PatchGAN architecture \cite{Isola_2017_CVPR}. 
 Finally, the inpainted edge maps are obtained by:
 \begin{equation}
-\label{eq:edgenet}
-\boldsymbol{E}=G^E(\boldsymbol{E}^{i},\boldsymbol{X}^{g},\boldsymbol{M}).
+	\label{eq:edgenet}
+	\boldsymbol{E}=G^E(\boldsymbol{E}^{i},\boldsymbol{X}^{g},\boldsymbol{M}).
 \end{equation}
 
 The ENet is trained by playing a minimax game to optimize the generator $G^E$ and the discriminator $D^E$ as
 \begin{equation}
-\label{eq:loss_e}
-\min\limits_{G^E} \max \limits_{D^E} \big(\mathcal{L}^E_{adv}+\lambda_1 * \mathcal{L}^E_{fm}\big),
+	\label{eq:loss_e}
+	\min\limits_{G^E} \max \limits_{D^E} \big(\mathcal{L}^E_{adv}+\lambda_1 * \mathcal{L}^E_{fm}\big),
 \end{equation}
 where $\mathcal{L}^E_{adv}$ and $\mathcal{L}^E_{fm}$ are the adversarial loss and feature matching loss. 
 $\lambda_1$ is a hyper-parameter to balance the three terms.
 %
 Following the adversarial learning manner, $\mathcal{L}^E_{adv}$ can facilitate ENet to produce plausible edge maps by:
 \begin{equation} \label{eq:edge_adver}
-\begin{aligned} 
-\mathcal{L}^E_{adv}  =&\mathbb{E}_{(\boldsymbol{E}^{gt},\boldsymbol{X}^{g})}\big[logD^E(\boldsymbol{E}^{gt},\boldsymbol{X}^{g})\big]\\ 
-+&\mathbb{E}_{(\boldsymbol{E},\boldsymbol{X}^{g})}\big[log\big(1-D^E ( \boldsymbol{E},\boldsymbol{X}^{g})\big)\big],
-\end{aligned}
+	\begin{aligned} 
+		\mathcal{L}^E_{adv}  =&\mathbb{E}_{(\boldsymbol{E}^{gt},\boldsymbol{X}^{g})}\big[logD^E(\boldsymbol{E}^{gt},\boldsymbol{X}^{g})\big]\\ 
+		+&\mathbb{E}_{(\boldsymbol{E},\boldsymbol{X}^{g})}\big[log\big(1-D^E ( \boldsymbol{E},\boldsymbol{X}^{g})\big)\big],
+	\end{aligned}
 \end{equation}
 where $\boldsymbol{E}^{gt}$ represents the ground truth edge maps. $\mathcal{L}^E_{fm}$ evaluates the feature-level similarity between ground truth edge maps and predicted edge maps, which helps to create structurally rational edge maps. 
 Feature matching loss was first proposed in \cite{wang2018high} and has been widely used in recent GANs.
 The feature matching loss is defined as:
 \begin{equation}
-\label{eq:edge_fm}
-\mathcal{L}^E_{fm}=\sum_{k=1}^L{\frac{1}{N_k}\left\| D^E_k(\boldsymbol{E}^{gt},\boldsymbol{X}^{g})- D^E_k(\boldsymbol{E},\boldsymbol{X}^{g})\right\|_1},
+	\label{eq:edge_fm}
+	\mathcal{L}^E_{fm}=\sum_{k=1}^L{\frac{1}{N_k}\left\| D^E_k(\boldsymbol{E}^{gt},\boldsymbol{X}^{g})- D^E_k(\boldsymbol{E},\boldsymbol{X}^{g})\right\|_1},
 \end{equation}
 where $D^E_k$ is the output of the $k$-th layer in $D^E$, while $N_k$ is the element number of $D^E_k$. 
 %Note that the discriminator $D^E$ is not optimized by the feature matching loss term. It plays as a feature extractor to optimize the generator $G^E$ for producing plausible edge maps $\boldsymbol{E}$.
@@ -82,9 +82,9 @@ $T$ frames, then we fill textures under the structural guidance in a coarse-to-f
 The proposed TexNet consists of a coarse network and a refinement network, as Fig.~\ref{fig:stiNet} shows.
 %
 The input of TexNet is the concatenation of $\boldsymbol{X}$, $\boldsymbol{E}$, and $\boldsymbol{M}$.
-First, the coarse inpainting network consists of a set of 3D convolutions to capture the temporal information, which targets to produce an rough completion for the $T$ frames  $\boldsymbol{Y}^i$ with colors.
+First, the coarse inpainting network consists of a set of 3D convolutions to capture the temporal information, which targets to produce a rough completion for the $T$ frames  $\boldsymbol{Y}^i$ with colors.
 %The 3D coarse network incorporates neighboring frames by convolutions of the time dimension.
-Second, the refinement network takes the synthesized edge maps $\boldsymbol{E}$, $\boldsymbol{Y}^i$ and $\boldsymbol{M}$ as input and uses 2D convolutions to enhance structure details and synthesize frame $Y^T_t$. 
+Second, the refinement network takes the synthesized edge maps $\boldsymbol{E}$, $\boldsymbol{Y}^i$, and $\boldsymbol{M}$ as input and uses 2D convolutions to enhance structure details and synthesize frame $Y^T_t$. 
 %For the corrupted region, our ENet first completes sparse edges which well represent the structure of the missing content, then TexNet progressively replenishes textures under the guidance of synthesized edges.
 
 
@@ -100,15 +100,16 @@ The intermediate video features and embedded edge features are interacted to cal
 The normalized attention map is applied to the intermediate video features, and the structure information is thus embedded in TexNet.
 After introducing structural guidance, the inpainted content by TexNet becomes more structurally and semantically realistic, as Fig.~\ref{fig:coarse-fine} shows.
 %Fig.~\ref{fig:coarse-fine} shows an example of our structure-guided inpainting result. 
- 
+
 
 
 The TexNet is train as:
 %
 \begin{equation}
 	\label{eq:1}
-		\min\limits_{G^T} \max \limits_{D^T} \big(\mathcal{L}^{T}_{rec}+\mathcal{L}^T_{adv}\big).
+	\min\limits_{G^T} \max \limits_{D^T} \big(\mathcal{L}^{T}_{rec}+\mathcal{L}^T_{adv}\big),
 \end{equation}
+where $G^T$ denotes the TexNet and $D^T$ is the discriminator, which has a similar architecture as $D^E$.
 %
 Inspired by \cite{nazeri2019edgeconnect}, the first term $\mathcal{L}^{T}_{rec}$ is the $l_1$-reconstruction loss to measure the difference between predicted video frames and the ground truth video frames $\widetilde{\boldsymbol{Y}}$.
 Different from \cite{nazeri2019edgeconnect}, we penalize both the coarse predictions $\boldsymbol{Y}^i$ and refined frame $Y^{T}_t$, given by:
@@ -121,19 +122,19 @@ Different from \cite{nazeri2019edgeconnect}, we penalize both the coarse predict
 %
 Besides, an extra adversarial loss $\mathcal{L}^T_{adv}$ is introduced to promote the visual realism of the generated frame.
 \dlt{ by:
-%$\mathcal{L}^I_{adv}$ is defined as:
-\begin{equation}
-	\label{eq:inp_adver}
-	\mathcal{L}^I_{adv}=\mathbb{E}[logD^I(\widetilde{Y}_t)]+\mathbb{E}[log\big(1-D^I(Y^I_{t})\big)],
-\end{equation}
-where $G^I$ is the TexNet and $D^I$ has the similar architecture with $D^E$.}
+	%$\mathcal{L}^I_{adv}$ is defined as:
+	\begin{equation}
+		\label{eq:inp_adver}
+		\mathcal{L}^I_{adv}=\mathbb{E}[logD^I(\widetilde{Y}_t)]+\mathbb{E}[log\big(1-D^I(Y^I_{t})\big)],
+	\end{equation}
+	where $G^I$ is the TexNet and $D^I$ has the similar architecture with $D^E$.}
 % $\mathcal{L}^I_{adv}$ enforces the generated frame to be more realistic.
 
 
 
 
 
- \begin{figure}[t]
+\begin{figure}[t]
 	\centering
 	\includegraphics[width=0.7\columnwidth]{SEM} % Reduce the figure size so that it is slightly narrower than the column. Don't use precise values for figure width.This setup will avoid overfull boxes. 
 	\caption{Architecture of the structure attention module. $C$ is the channel of the input video features, and $N=H\times W$. $\otimes$ represents matrix multiplication. Usually, we set $C_1=C/8$.}
@@ -152,19 +153,19 @@ where $G^I$ is the TexNet and $D^I$ has the similar architecture with $D^E$.}
 			\cline{2-10} 
 			&PSNR & SSIM & FID & PSNR & SSIM & FID & PSNR & SSIM & FID&Speed(fps))\\
 			\hline
-			Nazeri et al. &28.6446 &0.9484  &   38.2116  &	
+			Nazeri et al. &28.6446 &0.9484  &   38.2116  &    
 			30.7478 & 0.9647 &  16.2739  &
 			25.6693  & 0.9088 &  43.0366&22.81 \\
 			\hline
-			Wang et al. &27.9668 & 0.9515 &  40.7199  &	 
-			31.5776	& 0.9678 &  13.8383&   
+			Wang et al. &27.9668 & 0.9515 &  40.7199  &     
+			31.5776    & 0.9678 &  13.8383&   
 			32.1862 & 0.9626 & 19.1191 &8.1634 \\
 			\hline
 			
 			
 			Kim et al. b& 28.0846&0.9468 &  39.9377  & 
-			36.8598	& 0.9728 &7.2315  &
-			33.5549	& 0.9646 & 9.3797&1.2275  \\
+			36.8598    & 0.9728 &7.2315  &
+			33.5549    & 0.9646 & 9.3797&1.2275  \\
 			\hline
 			Xu et al. &29.0531 & 0.9497 &  32.8860  & 
 			37.8241& 0.9772 &6.3746  &
@@ -174,19 +175,19 @@ where $G^I$ is the TexNet and $D^I$ has the similar architecture with $D^E$.}
 			\hline
 			
 			
-			TexNet &28.0174 &0.9494  &  42.7164   &	
-			33.8131 &  0.9705  &8.2390	& 
+			TexNet &28.0174 &0.9494  &  42.7164   &    
+			33.8131 &  0.9705  &8.2390    & 
 			30.0680& 0.9390 & 20.6358&7.6335
 			\\
 			\hline
-			+edge input  &29.5242 &  0.9520& 36.2097   &	
-			37.6630	& 0.9798 &3.5161    &	
-			33.8206	&0.9659  &    6.6651& 5.2356 \\
+			+edge input  &29.5242 &  0.9520& 36.2097   &    
+			37.6630    & 0.9798 &3.5161    &    
+			33.8206    &0.9659  &    6.6651& 5.2356 \\
 			\hline
 			
-			+SAM &29.9918 &  0.9533 &  27.4198  &	
-			38.2433	& 0.9807 &   2.5083  &	
-			35.7783	&0.9712  &   5.8786 & 5.1546\\
+			+SAM &29.9918 &  0.9533 &  27.4198  &    
+			38.2433    & 0.9807 &   2.5083  &    
+			35.7783    &0.9712  &   5.8786 & 5.1546\\
 			\hline
 			
 			
@@ -216,7 +217,7 @@ It is vital to maintain temporal consistency in video inpainting.
 %Optical flows are widely used to represent the dense correspondence between frames.
 To enhance temporal consistency in the synthesized results, we employ optical flows to smooth the inpainted edge maps and synthesized frames from ENet and TexNet.
 % and reinforce the temporal coherence between neighboring edge maps and frames during training. 
-Moreover, we design an ensemble module which leverages the previous inpainted frames to refine the current frame completion, as Fig.~\ref{fig:stiNet} shows. 
+Moreover, we design an ensemble module that leverages the previous inpainted frames to refine the current frame completion, as Fig.~\ref{fig:stiNet} shows. 
 %
 We design a flow inpainting network (FNet) to predict the optical flow in the missing region.
 %
@@ -248,8 +249,8 @@ $k$ denotes the index of neighboring frames ($k\in \left\{-7,-3,+3,+7 \right\}$)
 
 The total loss function for the FNet is given by:
 \begin{equation}
-\label{eq:flow_all}
-\mathcal{L}_{flow}=   \mathcal{L}^F_{rec}+ \mathcal{L}^F_{har}+\mathcal{L}_{fec},
+	\label{eq:flow_all}
+	\mathcal{L}_{flow}=   \mathcal{L}^F_{rec}+ \mathcal{L}^F_{har}+\mathcal{L}_{fec},
 \end{equation}
 where $\mathcal{L}^F_{rec}$ and $\mathcal{L}^F_{har}$ are respectively $l_1$ loss and hard example mining loss in the missing regions, following the definition in \cite{Xu_2019_CVPR}. 
 %Specifically, $\mathcal{L}^F_{har}$ encourages the network to focus on those hard samples in order to avoid blurry texture.
@@ -259,8 +260,8 @@ Also, $\mathcal{L}_{fec}$ is added to Eq.~\eqref{eq:loss_e} for joint training o
 %In terms of FNet, $\mathcal{L}_{fec}$ constrains the model to focus on edges.
 %Thus, the total loss function for joint training of ENet and FNet is:
 %\begin{equation}
-%	\label{eq:flow}
-%	\mathcal{L}_{joint}=\mathcal{L}_{edge}+\mathcal{L}_{flow}+ \mathcal{L}_{fec}.
+%    \label{eq:flow}
+%    \mathcal{L}_{joint}=\mathcal{L}_{edge}+\mathcal{L}_{flow}+ \mathcal{L}_{fec}.
 %\end{equation}
 
 
@@ -268,16 +269,15 @@ To eliminate temporal flickers in the completed video frames, we enforce the tem
 %
 Specifically, the neighboring frames are warped into the target frame to compute the difference: 
 \begin{equation}
-\label{eq:inp_flow}
-\mathcal{L}^T_{flo}=\sum_{\widehat{t}\in\mathcal{T}}\left\| Y^T_t-\phi(O_{t\Rightarrow \widehat{t}},Y_{\widehat{t}}) \right\|_1,
+	\label{eq:inp_flow}
+	\mathcal{L}^T_{flo}=\sum_{\widehat{t}\in\mathcal{T}}\left\| Y^T_t-\phi(O_{t\Rightarrow \widehat{t}},Y_{\widehat{t}}) \right\|_1,
 \end{equation}
 where $\mathcal{T}=\{t-7,t-3\}$. $\phi(O_{t\Rightarrow \widehat{t}},Y_{\widehat{t}})$ warps $Y_{\widehat{t}}$ to $Y^T_{t}$ using flow $O_{t\Rightarrow \widehat{t}}$.
 %$O_{t\Rightarrow \widehat{t}}$ is predicted using the subsequent flow inpainting network.
 %$\mathcal{L}^I_{flo}$ expects that all the neighboring frames can be well warped to the target frame with small reconstruction loss.
 %
 $\mathcal{L}^T_{flo}$ is added to Eq.~\eqref{eq:1} when training TexNet with flow warping.
-Finally, a temporal ensemble module is designed 
-to refine the current frame $Y_t$ by aggregating previous frames. %The architecture is shown in Fig.~\ref{fig:stiNet}. 
+Finally, a temporal ensemble module is designed to refine the current frame $Y_t$ by aggregating previous frames. %The architecture is shown in Fig.~\ref{fig:stiNet}. 
 This module is trained with a $l_1$-reconstruction loss and an adversarial loss.
 
 

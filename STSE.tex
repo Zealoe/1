@@ -112,10 +112,10 @@
 \maketitle
 
 \begin{abstract}
-The fundamental challenge in video inpainting is the difficulty of generating video contents with fine details while keeping spatiotemporal coherence in the missing region. 
+The fundamental challenge in video inpainting is the difficulty of generating video contents with fine details while keeping spatio-temporal coherence in the missing region. 
 Most existing methods suffer from cracks and blurs mainly because they directly fill pixel colors without considering structural coherence, which has a significant impact on visual quality. 
 In this paper, we present a novel structure-guided video inpainting approach to tackle this problem. 
-To produce visually plausible content in the missing region, we first synthesize edge maps that well represent scene structure and object shapes by an edge inpainting network using 3D convolutions in multiple neighboring frames. 
+To produce visually plausible content in the missing region, we first synthesize edge maps that well represent scene structure and object shapes by applying an edge inpainting network with 3D convolutions to video volume. 
 Then we replenish pixel colors and textures using a coarse-to-fine synthesis network under the guidance of the integrated structure. 
 We design a structure attention module to fully exploit the correlation between video contents and structural edges. 
 Furthermore, to enhance the temporal consistency of the inpainting results, we develop a flow-assisted scheme to enforce temporal consistency between the synthesized adjacent edge maps during training and smoothen flickers in the inpainting results via a temporal ensemble module. 
@@ -136,7 +136,7 @@ In this paper, we propose a novel structure-guided video inpainting approach, wh
 Using the edge inpainting network, the edges in the missing region are first estimated to explicitly represent the target structure. 
 Then under the guidance of the sparse edges, the missing content can be synthesized with intact structure and fine details.
 %
-Our proposed structure attention module effectively exploit the correlation between structure and textures to improve the visual quality.
+Our proposed structure attention module effectively exploits the correlation between structure and textures to improve visual quality.
 %
 Besides, the temporal coherence of the inpainting frames is further enhanced by our flow-assisted modules.
 Experiments on YouTubeVOS and DAVIS datasets demonstrate the effectiveness of our method.

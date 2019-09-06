@@ -7,12 +7,12 @@ Video inpainting aims to recover the missing content of a corrupted video and as
 High-quality video inpainting requires not only realistic structures with visual details but also temporal consistency. 
 Compared with image inpainting, video inpainting is significantly more challenging due to the extra time dimension, while human eyes are sensitive to flickers and jitters.
 % 
-Though great progress has been made in 2D image inpainting using deep learning techniques \cite{yu2018free,Xiong_2019_CVPR}, directly applying these approaches to each frame individually for video inpainting will lead to flaws, flickers and jitters. 
+Though great progress has been made in 2D image inpainting using deep learning techniques \cite{yu2018free,Xiong_2019_CVPR}, directly applying these approaches to each frame individually for video inpainting will lead to flaws, flickers, and jitters. 
 
 \begin{figure}[t]
 	\centering
 	\includegraphics[width=1.0\columnwidth]{zong} % Reduce the figure size so that it is slightly narrower than the column. Don't use precise values for figure width.This setup will avoid overfull boxes. 
-	\caption{Overview of our structure-guided inpainting network. We first completes the missing edges by aggregating information from neighboring frames to represent target structure using the ENet. The TexNet synthesizes textures under the structure guidance. Moreover, the FNet predicts missing optical flow to enforce temporal coherence.}
+	\caption{Overview of our structure-guided inpainting network. We first complete the missing edges by aggregating information from neighboring frames to represent the target structure using the ENet. The TexNet synthesizes textures under the structure guidance. Moreover, the FNet predicts missing optical flow to enforce temporal coherence.}
 	\label{zong}
 \end{figure}
 
@@ -25,7 +25,7 @@ Recently, deep-learning-based methods achieve great performance improvement.
 A straightforward solution is to utilize 3D convolution layers to extract spatiotemporal features and predict missing content with smooth motion \cite{wang2019video}.
 Optical flow is commonly used in subsequent methods to aggregate contextual information from neighboring frames and synthesize temporally smooth results~\cite{Xu_2019_CVPR,Kim_2019_CVPR,Kim_2019_CVPR1}.
 %
-By introducing motion guidance, these methods pay more attention on temporal smoothness, however, structure rationality and object details have not been well explored. 
+By introducing motion guidance, these methods pay more attention to temporal smoothness, however, structure rationality and object details have not been well explored. 
 %However, structural rationality is also a significant factor for realistic video inpainting. 
 %
 Without definite representation and generation of the target structure, these methods tend to produce over-smoothed regions. 
@@ -34,7 +34,7 @@ To solve this problem, they propose to predict object contours or edges as auxil
 %
 On the other hand, human eyes are sensitive to the temporal discontinuity, which frequently occurs at edges. 
 This brings the difficulty of simultaneously completing structure in fine details and preserving temporal coherence in video inpainting.
- 
+
 \begin{figure*}[ht]
 	\centering
 	\includegraphics[width=2.0\columnwidth]{sti} % Reduce the figure size so that it is slightly narrower than the column. Don't use precise values for figure width.This setup will avoid overfull boxes. 
@@ -47,21 +47,21 @@ This brings the difficulty of simultaneously completing structure in fine detail
 In this paper, we present a novel structure-guided video inpainting approach that effectively exploits the spatio-temporal structure information to improve video inpainting quality.  
 We explore the correlation among structure, motion, and texture in video inpainting to complete the missing region with valid structure, rich visual details, and temporal coherence simultaneously.
 %
-To synthesize the missing content, we first predict sparse edges that effectively represent the target structure, and then fill textures under the guidance of the concise structure in a coarse-to-fine manner.
-To further enhance the temporal coherence of synthesized frames, we employ motion flows to warp neighboring frames to consistency check and temporal ensemble. 
+To synthesize the missing content, we first predict sparse edges that effectively represent the target structure, and then fill textures under the guidance of concise structure.
+To further enhance the temporal coherence of synthesized frames, we employ motion flows for consistency check and temporal ensemble. 
 
 
 
 As shown in Fig.~\ref{zong}, our method consists of three modules, which are respectively an edge inpainting network (ENet), a texture inpainting network (TexNet), and a flow inpainting network (FNet).
 %
-Given multiple adjacent frames with masks, ENet first completes edge maps that depict the target structure. 
-Then, under the guidance of the completed edges, TexNet fills the pixel colors and textures in a coarse-to-fine manner.
-A structure attention module is designed to capture the latent spatial relevance between video textures and edges.
-Compared with original edge maps, the structure-texture relevance is more efficiently embedded in TexNet, which benefits fine-detailed frame generation.
+Given multiple adjacent frames with masks, ENet first completes edge maps that depict the target structure via a 3D+2D architecture. 
+Then, under the guidance of completed edges, TexNet fills the pixel colors and textures in a coarse-to-fine manner.
+Specifically, a structure attention module is designed to capture the latent spatial relevance between video textures and edges.
+Compared with original edge maps, the structure-texture relevance is more effectively embedded in TexNet, which benefits fine-detailed frame generation.
 Besides, the developed FNet predicts the missing optical flow, which provides auxiliary motion knowledge. 
 Explicitly, a flow-edge consistency constraint and a temporal ensemble module are utilized to smoothen the edge maps and final inpainted frames. 
 Consequently, the inpainted frames using our approach are not only temporal consistent, but also complete in structure and rich in visual details.
- 
+
 
 %In summary, we present a novel structure-guided video inpainting method, which can generate structural reasonable and temporal coherent inpainted frames.
 %
@@ -101,15 +101,15 @@ Multiple discriminators can be used to constrain both global and local coherence
 Subsequent approaches solve more specific problems in image inpainting, such as inpainting irregular holes with partial convolution~\cite{liu2018partialinpainting} and gated convolution \cite{yu2018free} for dynamic feature selection.
 %
 While these methods tend to generate over-smoothed and blurry results, a two-stage approach is proposed to hallucinate edges first and then fill pixel colors using the edges as a prior \cite{nazeri2019edgeconnect}. 
-Though high quality static images with reasonable structure can be generated using this method, simply extending it from image to video by 3D convolutions inevitably fails because of no guarantee on the temporal coherence.
+Though high-quality static images with reasonable structure can be generated using this method, simply extending it from image to video by 3D convolutions inevitably fails because of no guarantee on the temporal coherence.
 %These image inpainting methods can obtain plausible synthesized images. 
 %\cite{nazeri2019edgeconnect} introduces an edge generator to refine generated structure in image inpainting. 
- 
+
 
 %%% video inpainting 
 \paragraph{Deep Video Inpainting.}
-%However, directly extending these state-of-the-art image inpainting methods to video domain is not an optimal solution, which will generate videos with serious temporal flickers, artifacts and jitters. 
-Besides of the challenge in maintaining temporal coherence, image inpainting methods do not fully utilize useful complementary information in neighboring frames, which could help large hole completion.
+%However, directly extending these state-of-the-art image inpainting methods to video domain is not an optimal solution, which will generate videos with serious temporal flickers, artifacts, and jitters. 
+Besides the challenge in maintaining temporal coherence, image inpainting methods do not fully utilize useful complementary information in neighboring frames, which could help large hole completion.
 Several methods based on deep neural networks have been proposed just recently.
 %
 The first CNN-based video inpainting method is CombCN \cite{wang2019video}, which jointly learns temporal structure and spatial details via 3D convolutions.
@@ -126,10 +126,10 @@ Under the structural guidance, more pleasing results could be synthesized with r
 
 %\cite{Kim_2019_CVPR} automatically removes texts in videos without mask indications, which aggregates temporal features from encoder to decoder and applies a recurrent feedback. 
 %\cite{Kim_2019_CVPR1} introduces convolutional LSTM and temporal feature aggregation to obtain temporal consistency and learn information from neighboring frames. 
- 
 
 
- 
+
+
 
 
 
